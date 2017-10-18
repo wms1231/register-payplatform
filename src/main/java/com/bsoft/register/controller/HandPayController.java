@@ -177,7 +177,6 @@ public class HandPayController {
 	@ExceptionHandler(value = { Exception.class })
 	@ResponseBody
 	public String exceptionHander(Exception ex, HttpServletRequest request) {
-		System.out.println("hello,Git!");
 		logger.error("其它异常=>" + ex.getMessage());
 		return ResultMessageUtil.getSpecialServiceFail(null, "其它错误");
 	}
