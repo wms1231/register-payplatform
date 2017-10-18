@@ -360,25 +360,7 @@ public class HandPayServiceImpl implements HandPayService {
 		map.put("computerName", channelInfoArr[2]);
 		map.put("ip", channelInfoArr[3]);
 
-		/*
-		 * BigDecimal payMoney = new BigDecimal("0");
-		 * 
-		 * // 取钱 try { Map<String, Object> bodyMap = (Map<String, Object>)
-		 * billResultMap.get("body"); List<Object> feeRecordsMap =
-		 * (List<Object>) bodyMap.get("feeRecords"); for (Object obj :
-		 * feeRecordsMap) { Map<String, Object> feeRecord = (Map<String,
-		 * Object>) obj; BigDecimal monery = (BigDecimal)
-		 * feeRecord.get("totalFee"); payMoney.add(monery); } } catch (Exception
-		 * e) { payMoney = new BigDecimal("0"); Map<String, Object> bodyMap =
-		 * (Map<String, Object>) billResultMap.get("body"); List<Object>
-		 * feeRecordsMap = (List<Object>) bodyMap.get("feeRecords"); for (Object
-		 * obj : feeRecordsMap) { Map<String, Object> feeRecord = (Map<String,
-		 * Object>) obj; String monery = (String) feeRecord.get("totalFee");
-		 * payMoney.add(BigDecimal.valueOf(Float.valueOf(monery))); }
-		 * 
-		 * }
-		 */
-
+		//传入钱
 		Double payMoney = 0.0;
 		try {
 			payMoney = (Double) requestMap.get("selfPay");

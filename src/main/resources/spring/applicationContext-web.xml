@@ -23,7 +23,7 @@
 			</list>
 		</property>
 	</bean>
-    
+            
 	<bean id="exceptionResolver" class="com.bsoft.support.exception.ControllerExceptionResolver">
 	</bean>
 
