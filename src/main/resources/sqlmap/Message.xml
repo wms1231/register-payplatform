@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="message">
+	<!-- 12580支付成功发送短信sql -->
+	<select id="queryPatNature" resultType="hashmap">
+		select to_char(b.lsbz) as visitFlag, to_char(b.brxz) as chargeFlag
+        from ms_yygh ms,ms_brda b
+         where  ms.brid = b.brid
+         <if test="HOSPNO != null">
+			and ms.hospno = #{HOSPNO}
+		 </if>            
+	</select>
+	
+	<!-- hcn支付成功发送短信 -->
+	<select id="queryHcnPatNature" resultType="hashmap">
+		select to_char(b.lsbz) as visitFlag, to_char(b.brxz) as chargeFlag
+		  from ms_yygh ms, ms_brda b
+		 where ms.brid = b.brid
+		      and ms.hospno = (SELECT ms.hospno
+		                      FROM MS_YYGH ms
+		                     WHERE ms.yymm = '111111'
+		                       and ms.yyxh = #{yyxh})
+	</select>
+</mapper>

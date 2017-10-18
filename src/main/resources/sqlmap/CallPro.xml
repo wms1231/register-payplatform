@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="callpro">
+	<!-- 功能测试使用 -->
+	<select id="getTestPro" statementType="CALLABLE" resultType="hashmap">
+	   <![CDATA[
+		     { CALL SPK_YYGH_JSON_1.BSHIS_usp_app_insert_cfxx2
+		       (
+			      #{input,mode=IN,jdbcType=CLOB},
+			      #{code,mode=OUT,jdbcType=VARCHAR},
+			      #{msg,mode=OUT,jdbcType=VARCHAR}
+		       )
+		     }
+	    ]]>
+   </select>
+   
+   <!-- 功能测试使用 -->
+	<select id="yspb" statementType="CALLABLE" resultType="hashmap">
+	   <![CDATA[
+		     { CALL SPK_YYGH_JSON_1.BSHIS_usp_chk_yspb
+		       (
+			      #{input,mode=IN,jdbcType=VARCHAR},
+			      #{msg,mode=OUT,jdbcType=VARCHAR},
+			      #{output,mode=OUT,jdbcType=BLOB}
+		       )
+		     }
+	    ]]>
+   </select>
+   
+   <!-- 动态调用存储过程  测试-->
+	<select id="yspb2" statementType="CALLABLE" resultType="hashmap">
+	   <![CDATA[
+		     { CALL  ${proName}
+		       (
+			      #{input,mode=IN,jdbcType=VARCHAR},
+			      #{msg,mode=OUT,jdbcType=VARCHAR},
+			      #{output,mode=OUT,jdbcType=BLOB}
+		       )
+		     }
+	    ]]>
+   </select>
+   
+    <!-- 公共存储过程 -->
+	<select id="order" statementType="CALLABLE" resultType="hashmap">
+	   <![CDATA[
+		     { CALL  ${proName}
+		       (
+			      #{input,mode=IN,jdbcType=VARCHAR},
+			      #{msg,mode=OUT,jdbcType=VARCHAR},
+			      #{output,mode=OUT,jdbcType=BLOB}
+		       )
+		     }
+	    ]]>
+   </select>
+   
+   <!-- 特殊存储过程处理 -->
+   
+   <!-- 插入处方 -->
+	<select id="insertRecipe" statementType="CALLABLE" resultType="hashmap">
+	   <![CDATA[
+		     { CALL  ${proName}
+		       (
+			      #{input,mode=IN,jdbcType=VARCHAR},
+			      #{code,mode=OUT,jdbcType=VARCHAR},
+			      #{msg,mode=OUT,jdbcType=VARCHAR}
+		       )
+		     }
+	    ]]>
+   </select>
+   
+   <!-- 费用预结算 -->
+	<select id="saveBill" statementType="CALLABLE" resultType="hashmap">
+	   <![CDATA[
+		     { CALL  ${proName}
+		       (
+			      #{input,mode=IN,jdbcType=VARCHAR},
+			      #{code,mode=OUT,jdbcType=VARCHAR},
+			      #{msg,mode=OUT,jdbcType=VARCHAR},
+			      #{output,mode=OUT,jdbcType=VARCHAR}
+		       )
+		     }
+	    ]]>
+   </select>
+   
+   <!-- 选择使用包名 -->
+   <select id="selectPro" resultType="hashmap">
+		select csz paramV from gy_xtcs where csmc='${@com.bsoft.constant.AppCommonConstant@PARAM_VALUE}'         
+   </select>
+   
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="msginfo">
+	<!-- 用户查询 -->
+	<select id="getmsginfo" resultType="hashmap">
+		SELECT HOSPNO,
+		       PHONENUM,
+		       DEPTNAME,
+		       DOCTORNAME,
+		       SCHEDULEDATE,
+		       TIMEFLAG,
+		       SERIALNUM,
+		       BEGINTIME,
+		       ENDTIME,
+		       URL,
+		       PATNAME,
+		       PATINDEX
+		  FROM msg_content
+		 WHERE 1 = 1
+		<if test="HOSPNO != null">
+			and HOSPNO = #{HOSPNO}
+		</if>
+	</select>
+	
+    <!-- 查询操作员 -->
+	<select id="queryOprator" resultType="hashmap">
+		select hospno, register,refunder,registtime,refundtime
+		from msg_content mc
+		where mc.hospno = #{HOSPNO}
+	</select>
+
+	<!-- 查询用户用户信息支付成功发送短信 -->
+	<select id="findMsgInfo" resultType="hashmap">
+		SELECT HOSPNO,
+		PHONENUM,
+		DEPTNAME,
+		DOCTORNAME,
+		SCHEDULEDATE,
+		TIMEFLAG,
+		SERIALNUM,
+		substr(BEGINTIME,1,5) as STARTTIME,
+		substr(ENDTIME,1,5) as ENDTIME,
+		URL,
+		PATNAME,
+		PATINDEX as PATNO
+		FROM msg_content ms
+		WHERE 1 = 1
+		<if test="HOSPNO != null">
+			and ms.hospno = #{HOSPNO}
+		</if>
+	</select>
+
+	<!-- 添加url字段 -->
+	<insert id="savemsginfo" parameterType="hashmap">
+		insert into msg_content
+		(HOSPNO,PHONENUM,DEPTNAME,DOCTORNAME,SCHEDULEDATE,TIMEFLAG,SERIALNUM,BEGINTIME,ENDTIME,URL,PATNAME,PATINDEX)
+		values
+		(#{HOSPNO},#{PHONENUM},#{DEPTNAME},#{DOCTORNAME},#{SCHEDULEDATE},#{TIMEFLAG},#{SERIALNUM},#{BEGINTIME},#{ENDTIME},#{URL},#{PATNAME},#{PATINDEX})
+	</insert>
+
+	<!-- 保存短信 添加了取消人和挂号人 -->
+	<insert id="saveMessageInfo" parameterType="hashmap">
+		insert into msg_content
+		(HOSPNO,
+		PHONENUM,
+		DEPTNAME,
+		DOCTORNAME,
+		SCHEDULEDATE,
+		TIMEFLAG,
+		SERIALNUM,
+		BEGINTIME,
+		ENDTIME,
+		URL,
+		PATNAME,
+		PATINDEX,
+		REGISTER,
+		REFUNDER,
+		REGISTTIME,
+   		REFUNDTIME)
+		values
+		(#{HOSPNO},
+		#{PHONENUM},
+		#{DEPTNAME},
+		#{DOCTORNAME},
+		#{SCHEDULEDATE},
+		#{TIMEFLAG},
+		#{SERIALNUM},
+		#{BEGINTIME},
+		#{ENDTIME},
+		#{URL},
+		#{PATNAME},
+		#{PATINDEX},
+		#{REGISTER},
+		#{REFUNDER},
+		#{REGISTTIME},
+		#{REFUNDTIME})
+	</insert>
+
+	<!-- 更新电话号码 -->
+	<update id="updatemsginfo" parameterType="hashmap">
+		update msg_content set
+		phonenum = #{phonenum}
+		where hospno = #{hospNo}
+	</update>
+
+	<!-- 更新取消人 -->
+	<update id="updateRefunder" parameterType="hashmap">
+		update msg_content set
+		refunder = #{refunder},
+		refundtime = #{refundtime}
+		where hospno = #{hospNo}
+	</update>
+</mapper>

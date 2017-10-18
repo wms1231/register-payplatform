@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dept">
+
+	<!-- 提供医生订单功能查询 -->
+	<select id="queryDept" resultType="hashmap">
+		select yy.ghks, gy.ksmc
+		from yy_kspb yy left join ms_ghks k on yy.ghks = k.ksdm left join gy_ksdm gy  on k.mzks = gy.ksdm
+		where yy.ysdm is not null 
+		<if test="deptCode != null  and deptCode != ''">
+			and  yy.ghks = #{deptCode}
+	    </if>
+		group by yy.ghks, gy.ksmc		
+	</select>
+	<!-- 根据科室查找医生 -->
+	<select id="queryDoctor" resultType="hashmap">
+		select distinct yy.ysdm as ysdm, yg.ygxm as ysxm
+		  from yy_kspb yy
+		  join gy_ygdm yg
+		    on yy.ysdm = yg.ygdm
+		    <where>
+		    	<if test="deptCode != null  and deptCode != ''">
+		    		and yy.ghks = #{deptCode}
+		    	</if>
+		    </where>
+		 order by yy.ysdm
+	</select>
+	
+	<!-- 根据医生名称搜索科室代码  -->
+	<select id="mutiQueryDept" resultType="hashmap">
+		select k1.ysdm as ysdm, k1.ghks as ksdm, yg.ygxm as ygxm
+		   from (select distinct yy.ysdm, yy.ghks
+		           from yy_kspb yy
+		          where yy.ysdm is not null) k1
+		   join gy_ygdm yg
+		     on k1.ysdm = yg.ygdm
+		  where 1=1
+		  <if test="doctorCode != null and doctorCode != ''">
+		 	 and k1.ysdm = #{doctorCode} 
+		  </if>
+		  <if test="doctorName != null and doctorName != ''">
+			 and  yg.ygxm =#{doctorName}	
+		  </if>
+	</select>
+	
+	
+	
+	<!-- 查询该医院预约情况 -->
+	<select id="queryDoctorOrder" resultType="hashmap">
+		select m2.deptCode    AS deptCode,
+               m2.deptName    AS deptName,
+               m2.doctorCode  AS doctorCode,
+               m2.doctorName  AS doctorName,
+               m2.patIdentity AS patIdentity,
+               m2.patName     AS patName,
+               m2.hbBrid      AS hbBrid,
+               m2.brid        AS brid,
+               m2.yyghBrid    AS yyghBrid,
+               m2.patPhone    AS patPhone,
+               m2.hbPhone     AS hbPhone,
+               m2.channel     AS channel,
+               m2.patOrder    AS patOrder,
+               m2.payMoney    AS payMoney,
+               m2.visDate     AS visDate,
+               m2.orderDate   AS orderDate,
+               m2.timeflag    AS timeflag,
+               m2.visNum      AS visNum,
+               m2.ghbz        AS ghbz,
+               m2.orderFlag   AS orderFlag,
+               m2.hisNum      AS hisNum,
+               m2.hbLockTime  AS hbLockTime,
+               m2.stopFlag    AS stopFlag,
+               mc.phonenum    AS phoneNum
+		  from (select m1.*, pj.tzbz as stopFlag 
+		          from (select ms.ksdm as deptCode, 
+		                       k.ksmc as deptName, 
+		                       ms.ysdm as doctorCode, 
+		                       gy.ygxm as doctorName, 
+		                       b.sfzh as patIdentity,
+		                       b.brxm as patName,
+		                       (select hb.brid
+		                          from yy_kspb_hb hb
+		                         where hb.sbxh = ms.yyhbsbxh) as hbBrid,
+		                       b.brid as brid,
+		                       ms.brid as yyghBrid,
+		                       b.jtdh as patPhone,
+		                       (select hb.lxdh
+		                          from yy_kspb_hb hb
+		                         where hb.sbxh = ms.yyhbsbxh) as hbPhone,
+		                       decode(ms.yymm, '111111', '12580', '其它') as channel,
+		                       ms.hospno as patOrder,
+		                       (k.zlf + k.ghf) as payMoney,
+		                       to_char(ms.yyrq, 'yyyy-mm-dd hh24:mi:ss') as visDate,
+		                       to_char(ms.ghrq, 'yyyy-mm-dd hh24:mi:ss') as orderDate,
+		                       to_char(nvl(ms.zblb, 0)) as timeflag,
+		                       ms.jzxh as visNum, 
+		                       to_char(ms.ghbz) as ghbz,
+		                       to_char(decode(ms.ghbz,
+		                              0,
+		                              case
+		                                when (sysdate >
+		                                     nvl((select hb.locktime
+		                                            from yy_kspb_hb hb
+		                                           where hb.sbxh = ms.yyhbsbxh
+		                                             and hb.brid = ms.brid),
+		                                          to_date('2017-01-01 01:01:01',
+		                                                  'yyyy-mm-dd hh24:mi:ss'))) then
+		                                 -1
+		                                else
+		                                 ms.ghbz
+		                              end,
+		                              ms.ghbz)) as orderFlag,
+		                       ms.yyhbsbxh as hisNum,
+		                       (select hb.locktime
+		                          from yy_kspb_hb hb
+		                         where hb.sbxh = ms.yyhbsbxh) as hbLockTime
+		                  from ms_yygh ms
+		                  left join ms_brda b
+		                    on ms.brid = b.brid
+		                  left join gy_ygdm gy
+		                    on gy.ygdm = ms.ysdm
+		                  left join ms_ghks k
+		                    on ms.ksdm = k.ksdm
+		                 where ms.yymm = '111111'
+		                   and ms.ysdm is not null
+		                   <if test="deptCode != null and deptCode != ''">
+						    	and ms.ksdm = #{deptCode} 	
+				           </if>
+				           
+		                   <if test="doctorCode != null and doctorCode != ''">
+						    	and ms.ysdm = #{doctorCode}	
+				           </if>
+		                   
+		                   <if test="beginTime != null and beginTime != ''">
+						    <![CDATA[ and ms.yyrq >= to_date(#{beginTime}, 'yyyy-mm-dd HH24:mi:ss')]]>
+				           </if>
+				           
+				           <if test="endTime != null and endTime != ''">
+						    <![CDATA[and ms.yyrq <=to_date(#{endTime}, 'yyyy-mm-dd HH24:mi:ss')]]>
+				           </if>
+				           <if test="timeFlag != null and timeFlag != ''">
+				            and ms.zblb = #{timeFlag}
+				           </if>
+		                ) m1
+		          join yy_kspb_hb p
+		            on m1.hisnum = p.sbxh
+		          join yy_kspb_jl pj
+		            on p.jlxh = pj.jlxh
+		         where  1 = 1
+	         	<if test="stopFlag != null and stopFlag != ''">
+			        and pj.tzbz = #{stopFlag}
+			    </if>
+			    <if test="orderState != null and orderState != ''">
+			        and m1.orderFlag = #{orderState}) m2
+			    </if>
+		    left join msg_content mc
+		    on m2.patOrder = mc.hospno
+	</select>
+		
+</mapper>

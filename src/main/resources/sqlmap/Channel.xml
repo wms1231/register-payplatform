@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="channel">
+	<!-- 查询渠道 -->
+	<select id="queryChannel" resultType="hashmap">
+		SELECT q.hisuser as channel, q.lxdz as address
+		  FROM yy_qd01 q
+		 WHERE q.qdmc = #{channel}
+	</select>
+	
+	<!-- 查询病人信息 -->
+	<select id="queryPatInfo" resultType="hashmap">
+		SELECT to_char(d.brid) as patientId,
+		       to_char(d.brxz) as patientType,
+		       d.brxm as patName,
+		       d.sfzh as idcard,
+		       to_char(d.csny, 'yyyy-mm-dd') as birthday,
+		       to_char(d.brxb) as patSex
+		  FROM MS_BRDA d
+		  WHERE d.brid = #{patId}
+	</select>
+	
+	
+</mapper>

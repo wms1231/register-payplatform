@@ -1,0 +1,259 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">供应商列表</h3>
+                <div class="box-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="table_search" class="form-control pull-right" placeholder="拼音首字母">
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="datagrid" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>编码</th>
+                        <th>供应商名称</th>
+                        <th>拼音缩写</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModalSave">
+                    新增供应商
+                </button>
+            </div>
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModalSave" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="supplierFormSave" role="form" method="post" action="../rest/common/insert"
+                  data-parsley-validate novalidate>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">新增供应商</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- text input -->
+                    <div class="form-group">
+                        <label>供应商名称</label>
+                        <input name="name" type="text" class="form-control" placeholder="必填" id="name" required="">
+                    </div>
+                    <div class="form-group">
+                        <label>拼音缩写</label>
+                        <input name="pyCode" type="text" class="form-control py" placeholder="必填" source="name"
+                               required="">
+                        <input name="status" value="1" type="hidden">
+                        <input name="sqlKey" value="Supplier" type="hidden">
+                        <input name="id" type="hidden">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="submitSave" type="submit" class="btn btn-primary" value="validated">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!--<div class="modal fade" id="myModalUpdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
+<!--<div class="modal-dialog" role="document">-->
+<!--<div class="modal-content">-->
+<!--<form id="supplierFormUpdate" role="form" method="post" action="../rest/common/update"-->
+<!--data-parsley-validate novalidate>-->
+<!--<div class="modal-header">-->
+<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span-->
+<!--aria-hidden="true">&times;</span>-->
+<!--</button>-->
+<!--<h4 class="modal-title" id="myModalLabel">新增供应商</h4>-->
+<!--</div>-->
+<!--<div class="modal-body">-->
+<!--&lt;!&ndash; text input &ndash;&gt;-->
+<!--<div class="form-group">-->
+<!--<label>供应商名称</label>-->
+<!--<input name="name" type="text" class="form-control" placeholder="必填" id="name2" required>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label>拼音缩写</label>-->
+<!--<input name="pyCode" type="text" class="form-control py" placeholder="必填" source="name2"-->
+<!--required>-->
+<!--<input name="id" type="hidden">-->
+<!--<input name="sqlKey" value="Supplier" type="hidden">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="modal-footer">-->
+<!--<button id="submitUpdate" type="submit" class="btn btn-primary">保存</button>-->
+<!--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>-->
+<!--</div>-->
+
+<!--</form>-->
+
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="myModalUpdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
+<!--<div class="modal-dialog" role="document">-->
+<!--<div class="modal-content">-->
+
+<!--<form id="supplierFormUpdate" role="form">-->
+<!--<div class="modal-header">-->
+<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span-->
+<!--aria-hidden="true">&times;</span>-->
+<!--</button>-->
+<!--<h4 class="modal-title" id="myModalLabel">新增供应商</h4>-->
+<!--</div>-->
+<!--<div class="modal-body">-->
+<!--&lt;!&ndash; text input &ndash;&gt;-->
+<!--<div class="form-group">-->
+<!--<label>供应商名称</label>-->
+<!--<input name="name" type="text" class="form-control" placeholder="必填" id="name">-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label>拼音缩写</label>-->
+<!--<input name="pyCode" type="text" class="form-control py" placeholder="必填" source="name">-->
+<!--<input name="status" value="1" type="hidden">-->
+<!--<input name="sqlKey" value="Supplier" type="hidden">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="modal-footer">-->
+<!--<button id="submit" type="submit" class="btn btn-primary">保存</button>-->
+<!--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>-->
+<!--</div>-->
+
+<!--</form>-->
+
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<script>
+    $(document).ready(function () {
+        var t = $('#datagrid').DataTable({
+//            "serverSide" : true,
+            "ajax": {
+                "url": "../rest/common/select?sqlKey=Supplier",
+                "dataSrc": "content"
+            },
+            "columns": [
+                {"data": null},
+                {"data": "id"},
+                {"data": "name"},
+                {"data": "pyCode"},
+                {"data": "status"},
+                {"data": null}
+            ],
+            columnDefs: [
+                {
+                    targets: 1,
+                    "visible": false,
+                    "searchable": false
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, row, meta) {
+                        return data == 1 ? "启用" : "禁用";
+                    }
+                },
+                {
+                    //   指定第最后一列
+                    targets: 5,
+                    render: function (data, type, row, meta) {
+                        var c = '<button type="button" class="btn btn-warning btn-xs" id="updateBtn" dataId=' + row.id + '>修改</button>&nbsp;';
+                        if (row.status == 1) {
+                            c = c + '<button type="button" class="btn btn-danger btn-xs" id="logoffBtn" dataId=' + row.id + '>注销</button>';
+                        }
+                        else {
+                            c = c + '<button type="button" class="btn btn-success btn-xs" id="openBtn" dataId=' + row.id + '>启用</button>';
+                        }
+                        return c;
+                    }
+                }]
+//            "pagingType":"first_last_numbers"
+        });
+
+        //序列号
+        t.on('order.dt search.dt', function () {
+            t.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+
+        $('#supplierFormSave').ajaxForm({
+            dataType: 'json',
+            success: function () {
+                $('#myModalSave').modal('hide');
+                $("#datagrid").DataTable().ajax.reload();
+                $('#supplierFormSave').parsley().reset();
+            },
+            resetForm: true,
+            beforeSubmit: function (arr, $form, options) {
+                return $('#supplierFormSave').parsley().validate();
+            }
+        })
+
+
+        $('#datagrid').on("click", "#logoffBtn", function () {
+            var id = $(this).attr("dataId");
+            $.ajax({
+                url: "../rest/common/update",
+                method: "POST",
+                data: JSON.stringify({"sqlKey": "Supplier", "id": id, "status": "0"}),
+                contentType: 'application/json;charset=UTF-8',
+                success: function (data) {
+                    $("#datagrid").DataTable().ajax.reload();
+                }
+            })
+        })
+
+        $('#datagrid').on("click", "#openBtn", function () {
+            var id = $(this).attr("dataId");
+            $.ajax({
+                url: "../rest/common/update",
+                method: "POST",
+                data: JSON.stringify({"sqlKey": "Supplier", "id": id, "status": "1"}),
+                contentType: 'application/json;charset=UTF-8',
+                success: function (data) {
+                    $("#datagrid").DataTable().ajax.reload();
+                }
+            })
+        })
+
+        $('#datagrid').on("click", "#updateBtn", function () {
+            var id = $(this).attr("dataId");
+            $.ajax({
+                url: "../rest/common/selectOne",
+                method: "GET",
+                data: {"sqlKey": "Supplier", "id": id, "status": "1"},
+                contentType: 'application/json;charset=UTF-8',
+                success: function (data) {
+                    $('#supplierFormSave').setForm(data.content);
+                    $('#myModalSave').modal('show');
+                }
+            })
+        })
+
+        //# sourceURL = supplier.html
+    });
+</script>

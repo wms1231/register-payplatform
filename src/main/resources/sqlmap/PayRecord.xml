@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cancelPay">
+	<!-- 查询 是否已经取消支付 -->
+	<select id="validateCancelPay" resultType="hashmap">	
+		select p2.hospno thhospno, p2.paymoney payAmount, p2.hospno_org yyhospno
+		  from payrecord p1, payrecord p2, ms_yygh m
+		 where p1.hospno = p2.hospno_org
+		   and m.hospno = p1.hospno
+		   and m.hospno = (select m2.hospno
+		                     from (select m.hospno, m.ghrq, m.ghbz
+		                             from ms_yygh m
+		                            where m.yyhbsbxh = #{yyhbsbxh}
+		                              and m.ghbz = 4
+		                              and m.brid = (select brid
+		                                              from (select ms.brid as brid
+		                                                      from ms_brda ms
+		                                                     where ms.sfzh = #{sfzh}
+		                                                     order by nvl(ms.mpi, 0) desc,
+		                                                              ms.brid desc)
+		                                             where rownum = 1)
+		                            order by m.ghrq desc) m2
+		                    where rownum = 1)
+		   and m.yyhbsbxh = #{yyhbsbxh}
+	</select>
+	
+	<!-- 查询 是否已经取消支付 2-->
+	<select id="validateCancelPay2" resultType="hashmap">	
+		select p2.hospno thhospno, p2.paymoney payAmount, p2.hospno_org yyhospno
+		  from payrecord p1, payrecord p2, ms_yygh m
+		 where p1.hospno = p2.hospno_org
+		   and m.hospno = p1.hospno
+		   and m.yyxh = #{yyxh}
+	</select>
+	
+	<!-- 查询电话号码 -->
+	<select id="queryPhone" resultType="hashmap">	
+		select hb.sbxh sbxh,hb.lxdh phone
+		 from yy_kspb_hb hb
+		 where hb.sbxh =
+		       (SELECT ms.yyhbsbxh FROM MS_YYGH ms WHERE ms.yyxh = #{yyxh})
+	</select>
+	<!-- 通过号表查询 电话号码-->
+	<select id="queryPhoneByHb" resultType="hashmap">	
+		select hb.sbxh sbxh,hb.lxdh phone
+		 from yy_kspb_hb hb
+		 where hb.sbxh = #{yyxh}
+	</select>
+	
+	<!-- 查询支付短信参数信息 -->
+	<select id="queryPayMessage" resultType="hashmap">	
+	    select hb.jzxh as serialNum,
+	           to_char(jl.ghrq, 'yyyy-mm-dd') as scheduleDate,
+	           (select ygxm from gy_ygdm d where jl.ysdm = d.ygdm ) as doctorName,
+	           g.ksmc as deptName,
+	           d.zblb as timeFlag,
+	           to_char(d2.kssj, 'HH24:MI') as startTime,
+	           to_char(d2.jssj, 'HH24:MI') as endTime,
+	           b.mzhm as patNo,
+	           b.brxm as patName,
+	           hb.lxdh as phone,
+	           jl.zsdz as address,
+	           to_char(nvl(jl.kslb,0)) as deptType
+	      from yy_kspb_hb hb,
+	           yy_kspb_jl jl,
+	           ms_ghks    m,
+	           yy_sd01    d,
+	           gy_ksdm    g,
+	           yy_sd02    d2,
+	           ms_brda    b
+	     where hb.jlxh = jl.jlxh
+	       and hb.sdmxxh = d2.sdmxxh
+	       and hb.brid = b.brid
+	       and m.ksdm = jl.ghks
+	       and hb.sdxh = d.sdxh
+	       and m.mzks = g.ksdm
+	       and hb.sbxh = (SELECT ms.yyhbsbxh FROM MS_YYGH ms WHERE ms.yyxh = #{yyxh})
+	</select>
+	
+	<!-- 专门为12580查询地址 -->
+	<select id="queryAddressByNo" resultType="hashmap">
+		select jl.zsdz as address
+		  from yy_kspb_jl jl
+		 where jl.jlxh =
+		       (select hb.jlxh
+		          from yy_kspb_hb hb
+		         where hb.sbxh =
+		               (select ms.yyhbsbxh
+		                  from ms_yygh ms
+		                 where ms.hospno = #{HOSPNO})) 
+	</select>
+	
+	<!-- 下面测试代码 -->
+	<select id="queryBrda" resultType="hashmap">
+		select * from ms_brda 
+	</select>
+	
+	<select id="querykspb" resultType="hashmap">
+		select yy.ghks as deptNo,
+		       (select m.ksmc from ms_ghks m where m.ksdm = yy.ghks) as deptName,
+		       (select  g.ksmc from gy_ksdm g where g.ksdm = (select m.mzks from ms_ghks m where m.ksdm = yy.ghks))  as parentDeptName,
+		       count(yy.ghks) as deptNum,
+		       wm_concat(yy.ysdm) as deptDoctors,
+		       wm_concat((select ygxm from gy_ygdm d where yy.ysdm = d.ygdm)) as doctorNames
+		  from yy_kspb yy
+		 group by yy.ghks 
+	</select>
+	
+	<select id="querykspb2" resultType="hashmap">
+		select yy.ghks as deptNo,
+		       (select m.ksmc from ms_ghks m where m.ksdm = yy.ghks) as deptName,
+		       (select  g.ksmc from gy_ksdm g where g.ksdm = (select m.mzks from ms_ghks m where m.ksdm = yy.ghks))  as parentDeptName,
+		       count(yy.ghks) as deptNum,
+		       wm_concat(yy.ysdm) as deptDoctors,
+		       wm_concat((select ygxm from gy_ygdm d where yy.ysdm = d.ygdm)) as doctorNames
+		  from yy_kspb yy
+		  where yy.ghks ='0105' and yy.ysdm in ('07008','28201')
+		 group by yy.ghks 
+	</select>
+</mapper>

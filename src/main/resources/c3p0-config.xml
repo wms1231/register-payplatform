@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 预留配置文件-->
+<c3p0-config>
+    <named-config name="bsoft2dh">
+        <property name="user">portal_his</property>
+        <property name="password">test</property>
+        <property name="driverClass">oracle.jdbc.driver.OracleDriver</property>
+        <property name="jdbcUrl">jdbc:oracle:thin:@172.20.17.31:1521:orcl</property>
+       
+        <!-- 下面的部分直接在程序中设置的,这部分不凑效,仅供参考,原因,网上找的代码配置的详细一点,这里比较简单 -->
+        <!-- 连接池初始化时建立的连接数 默认值是3 -->
+        <property name="initialPoolSize">10</property>
+        <!-- 连接的最大空闲时间  单位秒 默认是0-代表永远不会断开连接  超过设定时间的空闲连接将会断开 -->
+        <property name="maxIdleTime">30</property>
+        <!-- 连接池中拥有的最大连接数 默认值为15个 -->
+        <property name="maxPoolSize">50</property>
+        <!-- 连接池中保持的最小连接数  默认值为3个-->
+        <property name="minPoolSize">5</property>
+        <!-- 将连接池的连接数保持在minpoolsize 必须小于maxIdleTime设置  默认值为0代表不处理  单位秒 -->
+        <property name="maxIdleTimeExcessConnections">15</property>
+    </named-config>	
+    
+     <named-config name="BSLIS52">
+        <property name="user">bslis52</property>
+        <property name="password">bsoft</property>
+        <property name="driverClass">oracle.jdbc.driver.OracleDriver</property>
+        <property name="jdbcUrl">jdbc:oracle:thin:@172.20.16.39:1521:orcl</property>
+       
+        <!-- 下面的部分直接在程序中设置的,这部分不凑效,仅供参考,原因,网上找的代码配置的详细一点,这里比较简单 -->
+        <!-- 连接池初始化时建立的连接数 默认值是3 -->
+        <property name="initialPoolSize">10</property>
+        <!-- 连接的最大空闲时间  单位秒 默认是0-代表永远不会断开连接  超过设定时间的空闲连接将会断开 -->
+        <property name="maxIdleTime">30</property>
+        <!-- 连接池中拥有的最大连接数 默认值为15个 -->
+        <property name="maxPoolSize">50</property>
+        <!-- 连接池中保持的最小连接数  默认值为3个-->
+        <property name="minPoolSize">5</property>
+        <!-- 将连接池的连接数保持在minpoolsize 必须小于maxIdleTime设置  默认值为0代表不处理  单位秒 -->
+        <property name="maxIdleTimeExcessConnections">15</property>
+    </named-config>	
+    
+    
+    <named-config name="local">
+        <property name="user">jxke</property>
+        <property name="password">jxke</property>
+        <property name="driverClass">oracle.jdbc.driver.OracleDriver</property>
+        <property name="jdbcUrl">jdbc:oracle:thin:@127.0.0.1:1521:orcl</property>
+        <!-- 下面的部分直接在程序中设置的,这部分不凑效,仅供参考,原因,网上找的代码配置的详细一点,这里比较简单 -->
+        <!-- 连接池初始化时建立的连接数 默认值是3 -->
+        <property name="initialPoolSize">10</property>
+        <!-- 连接的最大空闲时间  单位秒 默认是0-代表永远不会断开连接  超过设定时间的空闲连接将会断开 -->
+        <property name="maxIdleTime">30</property>
+        <!-- 连接池中拥有的最大连接数 默认值为15个 -->
+        <property name="maxPoolSize">500</property>
+        <!-- 连接池中保持的最小连接数  默认值为3个-->
+        <property name="minPoolSize">10</property>
+        <!-- 将连接池的连接数保持在minpoolsize 必须小于maxIdleTime设置  默认值为0代表不处理  单位秒 -->
+        <property name="maxIdleTimeExcessConnections">15</property>
+    </named-config>	
+</c3p0-config>
