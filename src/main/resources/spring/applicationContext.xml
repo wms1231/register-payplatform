@@ -7,6 +7,5 @@
 	<!-- 配置文件 -->
 	<context:property-placeholder location="classpath:properties/*.properties" />
 	<!-- 统一导入文件 -->
-	<import resource="applicationContext-*.xml" />  
-	       
+	<import resource="applicationContext-*.xml" />         
 </beans>

@@ -8,6 +8,7 @@ public class PageResult {
 	private String message;
 	private Long rowCount;
 	private Integer pageSize;
+	private Integer pageNum;
 	private Integer pageNo;
 
 	private List<Map<String, Object>> list;
@@ -58,6 +59,14 @@ public class PageResult {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
 	}
 
 }

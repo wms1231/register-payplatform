@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="record">
+	<!-- 用户12580预约记录 -->
+	<select id="findOrderRecord" resultType="hashmap">
+		select *
+		  from (select mc.hospno   as hospno,
+		               mc.phonenum as lxdh,
+		               b.brxm      as brmc,
+		               b.sfzh      as sfzh,
+		               ms.djgh     as yyqd,
+		               to_char(decode(jl.tzbz,
+		                              0,
+		                              decode(ms.ghbz,
+		                                     0,
+		                                     case
+		                                       when (sysdate >
+		                                            nvl((select hb.locktime
+		                                                   from yy_kspb_hb hb
+		                                                  where hb.sbxh = ms.yyhbsbxh
+		                                                    and hb.brid = ms.brid),
+		                                                 to_date('2017-01-01 01:01:01',
+		                                                         'yyyy-mm-dd hh24:mi:ss'))) then
+		                                        1
+		                                       else
+		                                        0
+		                                     end,
+		                                     decode(ms.ghbz, 6, 1, ms.ghbz)),
+		                              2)) as yyzt,
+		               nvl(mc.doctorname, 'normal') as ysmc,
+		               mc.deptname as ksmc,
+		               to_char(ms.ghrq, 'yyyy-mm-dd hh24:mi:ss') as ghrq,
+                       to_char(ms.yyrq, 'yyyy-mm-dd hh24:mi:ss') as yyrq,
+		               mc.register as czgh,
+		               mc.register as czmc
+		          from ms_yygh     ms,
+		               msg_content mc,
+		               ms_brda     b,
+		               yy_kspb_hb  hb2,
+		               yy_kspb_jl  jl
+		         where mc.hospno = ms.hospno
+		           and ms.brid = b.brid
+		           and ms.yyhbsbxh = hb2.sbxh
+		           and jl.jlxh = hb2.jlxh
+		           <if test="register != null and register != ''">
+		           	and mc.register = #{register}
+		           </if>
+		           and ms.yyly = '9'
+		           <if test="beginTime != null and beginTime != ''">
+				    	<![CDATA[ and ms.ghrq >=  to_date(#{beginTime}, 'yyyy-mm-dd HH24:mi:ss')]]>
+		           </if>
+		           
+		           <if test="endTime != null and endTime != ''">
+				        <![CDATA[and ms.ghrq <=to_date(#{endTime}, 'yyyy-mm-dd HH24:mi:ss')]]>
+		           </if>
+		           order by ms.ghrq desc ) m where 1=1
+		 <if test="orderStatus != null and orderStatus != ''">
+		 	and m.yyzt = #{orderStatus}
+		 </if>
+	</select>
+</mapper>

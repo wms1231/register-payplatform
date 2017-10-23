@@ -10,5 +10,5 @@
 	<!-- 配置spring-cxf客户端 -->
 	<jaxws:client id="hisWebService" 
 		address="http://172.20.20.35/csp/i-his/DHC.HIS.BS.HISWebService.cls"
-		serviceClass="com.bsoft.client.mscf.HISWebServiceSoap" />   	        
+		serviceClass="com.bsoft.client.mscf.HISWebServiceSoap" /> 	        
 </beans>   

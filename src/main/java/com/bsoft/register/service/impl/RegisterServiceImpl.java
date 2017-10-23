@@ -583,6 +583,9 @@ public class RegisterServiceImpl implements RegisterService {
 		json.put("code", 0);
 		json.put("msg", "success");
 		String payTime = DateFormatUtils.format(new Date(), DateFormatUtils.DATE_TIME_PATTERN);
+		
+		//TODO 存在一个bug 更新失败 校验已经更新过了
+		
 		BeanService bshisservice = null;
 		try {
 			bshisservice = appointedService.RefundNotification(hisOrdNum, payAmt, payTime);
