@@ -46,11 +46,29 @@ public class OrderRecordController {
 		orderRecordService.download(request, response);
 	}
 
+	@RequestMapping(value = "/reportDownload", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public void reportDownload(@RequestParam(value = "register", required = false) String register,
+			@RequestParam(value = "beginTime", required = true) String beginTime,
+			@RequestParam(value = "endTime", required = true) String endTime,
+			@RequestParam(value = "orderStatus", required = false) String orderStatus,
+			@RequestParam(value = "orders", required = false) String[] orders, HttpServletResponse response) {
+
+		// 参数设置
+		String sqlKey = "record.findOrderRecord";
+		Map<String, Object> param = RequestDataUtil.getMapByInputParam(
+				Arrays.asList("register", "beginTime", "endTime", "orderStatus"),
+				Arrays.asList(register, DateUtils.getDefaultQueryTime(beginTime, true),
+						DateUtils.getDefaultQueryTime(endTime, false), orderStatus));
+
+		orderRecordService.download(response, register, beginTime, endTime, orderStatus, param, sqlKey, orders);
+	}
+
 	@RequestMapping(value = "/orderRecordQuery", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String orderRecordQuery(@RequestParam(value = "register", required = false) String register,
-			@RequestParam(value = "beginTime", required = false) String beginTime,
-			@RequestParam(value = "endTime", required = false) String endTime,
+			@RequestParam(value = "beginTime", required = true) String beginTime,
+			@RequestParam(value = "endTime", required = true) String endTime,
 			@RequestParam(value = "orderStatus", required = false) String orderStatus,
 			@RequestParam(value = "pageNo", required = true) Integer pageNo,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "1") Integer pageSize,
@@ -66,7 +84,7 @@ public class OrderRecordController {
 
 		Pager page = null;
 		try {
-			page = orderRecordService.orderRecordQuery(register, beginTime, endTime, orderStatus, param, pageNo,
+			page = orderRecordService.orderRecordQueryWithPage(register, beginTime, endTime, orderStatus, param, pageNo,
 					pageSize, sqlKey, orders);
 		} catch (Exception e) {
 			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, e.getMessage());
