@@ -29,7 +29,7 @@ import com.bsoft.tools.http.HttpRequestProxy;
 @Service
 public class KdServiceImpl implements KdService {
 
-	private static Logger logger = Logger.getLogger(HandPayServiceImpl.class);
+	private static Logger logger = Logger.getLogger(KdServiceImpl.class);
 
 	@Autowired
 	private ICommonService commonService;

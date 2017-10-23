@@ -41,6 +41,8 @@ public class AppCommonConstant {
 	public static final String SYSTEM_APP_USP_GETPAIDLIST = "4003";// 获取已支付列表
 	public static final String SYSTEM_APP_USP_GETFEELIST = "4004";// 获取收费单据详细列表
 	public static final String SYSTEM_APP_USP_BEFORE = "4000";// 取明细前先取GHMX的SBXH
+	public static final String SYSTEM_APP_USP_KD="KD001";//快递
+
 
 	
 	// =============================================掌上支付存储过程=====================================================
