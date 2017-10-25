@@ -29,10 +29,10 @@
 		                              2)) as yyzt,
 		               nvl(mc.doctorname, 'normal') as ysmc,
 		               mc.deptname as ksmc,
-		               to_char(ms.ghrq, 'yyyy-mm-dd hh24:mi:ss') as ghrq,
+		               to_char(ms.ghrq, 'yyyy-mm-dd hh24:mi:ss') as xdrq,
                        to_char(ms.yyrq, 'yyyy-mm-dd hh24:mi:ss') as yyrq,
 		               mc.register as czgh,
-		               mc.register as czmc
+		               mc.refunder as qxgh
 		          from ms_yygh     ms,
 		               msg_content mc,
 		               ms_brda     b,
@@ -52,6 +52,14 @@
 		           
 		           <if test="endTime != null and endTime != ''">
 				        <![CDATA[and ms.ghrq <=to_date(#{endTime}, 'yyyy-mm-dd HH24:mi:ss')]]>
+		           </if>
+		           
+		           <if test="yBeginTime != null and yBeginTime != ''">
+				    	<![CDATA[ and ms.yyrq >=to_date(#{yBeginTime}, 'yyyy-mm-dd HH24:mi:ss')]]>
+		           </if>
+		           
+		           <if test="yEndTime != null and yEndTime != ''">
+				        <![CDATA[and ms.yyrq <=to_date(#{yEndTime}, 'yyyy-mm-dd HH24:mi:ss')]]>
 		           </if>
 		           order by ms.ghrq desc ) m where 1=1
 		 <if test="orderStatus != null and orderStatus != ''">

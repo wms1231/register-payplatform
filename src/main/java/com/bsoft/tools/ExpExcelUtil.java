@@ -2,16 +2,17 @@ package com.bsoft.tools;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +25,11 @@ import org.springframework.util.StringUtils;
  *
  */
 public class ExpExcelUtil {
-	protected static final Logger log = LoggerFactory.getLogger(ExpExcelUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(ExpExcelUtil.class);
 	private static HSSFWorkbook WORK_BOOK = null;// 工作表 设置为全局加样式时用到
-	private static short HEAD_FONT_POINT = 16;// 表格头字体大小
-	private static short TITLE_FONT_POINT = 14;// 表格标题字体大小
-	private static short CONTENT_FONT_POINT = 12;// 表格内容字体大小
+	private static short HEAD_FONT_SIZE = 16;// 表格头字体大小
+	private static short TITLE_FONT_SIZE = 14;// 表格标题字体大小
+	private static short CONTENT_FONT_SIZE = 12;// 表格内容字体大小
 	private static short HEAD_ROW_HEIGHT = 410;// 表格头行高度
 	private static short TITLE_ROW_HEIGHT = 350;// 表格标题行高度
 	private static short CONTENT_ROW_HEIGHT = 320;// 表格内容行高度
@@ -72,6 +73,7 @@ public class ExpExcelUtil {
 		sheetName = "".equals(sheetName) ? DEFAULT_SHEET_NAME : sheetName;
 		HSSFSheet hssfSheet = WORK_BOOK.createSheet(sheetName);
 		int row = 0;// 创建的表格行号
+		
 		/** 创建表头合并单元格开始 */
 		if (StringUtils.hasText(headTitle)) {// 判断是否需要标题
 			int length = titleList.size();
@@ -118,27 +120,22 @@ public class ExpExcelUtil {
 	}
 
 	/**
-	 * 设置标题样式
+	 * 设置表头样式
 	 * 
 	 * @param workBook
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	private static HSSFCellStyle setHeadStyle(HSSFWorkbook workBook) {
-		/** 表头样式开始 */
 		HSSFCellStyle headStyle = workBook.createCellStyle();
-		headStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 水平居中
-		headStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER); // 垂直居中
-		headStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 下边框
-		headStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);// 左边框
-		headStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);// 上边框
-		headStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);// 右边框
+		headStyle.setAlignment(HorizontalAlignment.CENTER);
+		// 垂直居中
+		headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		headStyle.setBorderBottom(BorderStyle.NONE);
 		HSSFFont headFont = workBook.createFont();
 		headFont.setFontName(HEAD_FONT_NAME);
-		headFont.setFontHeightInPoints(HEAD_FONT_POINT);// 设置字体大小
-		headFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);// 粗体显示
-		headStyle.setFont(headFont);// 选择需要用到的字体格式
-		/** 表头样式结束 */
+		headFont.setFontHeightInPoints(HEAD_FONT_SIZE);
+		headFont.setBold(false);
+		headStyle.setFont(headFont);
 		return headStyle;
 	}
 
@@ -148,50 +145,40 @@ public class ExpExcelUtil {
 	 * @param workBook
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	private static HSSFCellStyle setTitleStyle(HSSFWorkbook workBook) {
-		/** 标题样式开始 */
 		HSSFCellStyle titleStyle = workBook.createCellStyle();
-		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 水平居中
-		titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER); // 垂直居中
-		titleStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 下边框
-		titleStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);// 左边框
-		titleStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);// 上边框
-		titleStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);// 右边框
-		HSSFFont titleFont = WORK_BOOK.createFont();
+		titleStyle.setAlignment(HorizontalAlignment.CENTER);//水平居中
+		titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);// 垂直居中
+		titleStyle.setBorderBottom(BorderStyle.NONE);
+		HSSFFont titleFont = workBook.createFont();
 		titleFont.setFontName(TITLE_FONT_NAME);
-		titleFont.setFontHeightInPoints(TITLE_FONT_POINT);// 设置字体大小
-		titleFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);// 粗体显示
-		titleStyle.setFont(titleFont);// 选择需要用到的字体格式
-		/** 标题样式结束 */
+		titleFont.setFontHeightInPoints(TITLE_FONT_SIZE);
+		titleFont.setBold(false);
+		titleStyle.setFont(titleFont);
 		return titleStyle;
 	}
 
 	/**
-	 * 设置标题样式
+	 * 设置内容样式
 	 * 
 	 * @param workBook
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	private static HSSFCellStyle setContentStyle(HSSFWorkbook workBook) {
-		/** 内容样式开始 */
 		HSSFCellStyle contentStyle = workBook.createCellStyle();
-		contentStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 水平居中
-		contentStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER); // 垂直居中
-		contentStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 下边框
-		contentStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		contentStyle.setAlignment(HorizontalAlignment.CENTER);
+		contentStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		contentStyle.setBorderBottom(BorderStyle.NONE);
 		contentStyle.setWrapText(true);
-		HSSFFont contentFont = WORK_BOOK.createFont();
+		HSSFFont contentFont = workBook.createFont();
 		contentFont.setFontName(CONTENT_FONT_NAME);
-		contentFont.setFontHeightInPoints(CONTENT_FONT_POINT);// 设置字体大小
-		contentStyle.setFont(contentFont);// 选择需要用到的字体格式
-		/** 内容样式结束 */
+		contentFont.setFontHeightInPoints(CONTENT_FONT_SIZE);
+		contentStyle.setFont(contentFont);
 		return contentStyle;
 	}
 
 	/**
-	 * 导出Execl
+	 * 导出Excel
 	 * 
 	 * @param response
 	 * @param fileName

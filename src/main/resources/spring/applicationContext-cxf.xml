@@ -8,7 +8,13 @@
 				            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
 				            http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 	<!-- 配置spring-cxf客户端 -->
-	<jaxws:client id="hisWebService" 
+	<!-- 调用东华webservice -->
+	<jaxws:client id="hisWebService"
 		address="http://172.20.20.35/csp/i-his/DHC.HIS.BS.HISWebService.cls"
-		serviceClass="com.bsoft.client.mscf.HISWebServiceSoap" /> 	        
+		serviceClass="com.bsoft.client.mscf.HISWebServiceSoap" />
+
+	<!-- 调用发送短信webservice -->
+	<jaxws:client id="sendMessageService"
+		address="http://172.20.16.156:5813/services/cmcc_mas_wbs"
+		serviceClass="org.csapi.service.CmccMasWbs" />
 </beans>   

@@ -1,11 +1,11 @@
 package com.bsoft.register.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bsoft.constant.CommonConstant;
 import com.bsoft.exception.WebException;
 import com.bsoft.register.service.OrderRecordService;
@@ -38,7 +37,6 @@ public class OrderRecordController {
 	@Autowired
 	private OrderRecordService orderRecordService;
 	private static Logger logger = Logger.getLogger(OrderRecordController.class);
-	private final static String NULL_VALUE = "";
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
@@ -49,43 +47,49 @@ public class OrderRecordController {
 	@RequestMapping(value = "/reportDownload", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public void reportDownload(@RequestParam(value = "register", required = false) String register,
-			@RequestParam(value = "beginTime", required = true) String beginTime,
-			@RequestParam(value = "endTime", required = true) String endTime,
+			@RequestParam(value = "xBeginTime", required = false) String xBeginTime,
+			@RequestParam(value = "xEndTime", required = false) String xEndTime,
+			@RequestParam(value = "yBeginTime", required = false) String yBeginTime,
+			@RequestParam(value = "yEndTime", required = false) String yEndTime,
 			@RequestParam(value = "orderStatus", required = false) String orderStatus,
 			@RequestParam(value = "orders", required = false) String[] orders, HttpServletResponse response) {
 
 		// 参数设置
 		String sqlKey = "record.findOrderRecord";
 		Map<String, Object> param = RequestDataUtil.getMapByInputParam(
-				Arrays.asList("register", "beginTime", "endTime", "orderStatus"),
-				Arrays.asList(register, DateUtils.getDefaultQueryTime(beginTime, true),
-						DateUtils.getDefaultQueryTime(endTime, false), orderStatus));
+				Arrays.asList("register", "beginTime", "endTime", "yBeginTime", "yEndTime", "orderStatus"),
+				Arrays.asList(register, DateUtils.getDefaultQueryTime(xBeginTime, true),
+						DateUtils.getDefaultQueryTime(xEndTime, false), DateUtils.getDefaultQueryTime(yBeginTime, true),
+						DateUtils.getDefaultQueryTime(yEndTime, false), orderStatus));
 
-		orderRecordService.download(response, register, beginTime, endTime, orderStatus, param, sqlKey, orders);
+		orderRecordService.download(response, register, xBeginTime, xEndTime,yBeginTime,yEndTime,orderStatus, param, sqlKey, orders);
 	}
 
 	@RequestMapping(value = "/orderRecordQuery", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String orderRecordQuery(@RequestParam(value = "register", required = false) String register,
-			@RequestParam(value = "beginTime", required = true) String beginTime,
-			@RequestParam(value = "endTime", required = true) String endTime,
+			@RequestParam(value = "xBeginTime", required = false) String xBeginTime,
+			@RequestParam(value = "xEndTime", required = false) String xEndTime,
+			@RequestParam(value = "yBeginTime", required = false) String yBeginTime,
+			@RequestParam(value = "yEndTime", required = false) String yEndTime,
 			@RequestParam(value = "orderStatus", required = false) String orderStatus,
 			@RequestParam(value = "pageNo", required = true) Integer pageNo,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "1") Integer pageSize,
 			@RequestParam(value = "orders", required = false) String[] orders) {
 
-		String returnMsg = NULL_VALUE;
 		String sqlKey = "record.findOrderRecord";
+		
 
 		Map<String, Object> param = RequestDataUtil.getMapByInputParam(
-				Arrays.asList("register", "beginTime", "endTime", "orderStatus"),
-				Arrays.asList(register, DateUtils.getDefaultQueryTime(beginTime, true),
-						DateUtils.getDefaultQueryTime(endTime, false), orderStatus));
+				Arrays.asList("register", "beginTime", "endTime", "yBeginTime", "yEndTime", "orderStatus"),
+				Arrays.asList(register, DateUtils.getDefaultQueryTime(xBeginTime, true),
+						DateUtils.getDefaultQueryTime(xEndTime, false), DateUtils.getDefaultQueryTime(yBeginTime, true),
+						DateUtils.getDefaultQueryTime(yEndTime, false), orderStatus));
 
 		Pager page = null;
 		try {
-			page = orderRecordService.orderRecordQueryWithPage(register, beginTime, endTime, orderStatus, param, pageNo,
-					pageSize, sqlKey, orders);
+			page = orderRecordService.orderRecordQueryWithPage(register, xBeginTime, xEndTime,yBeginTime,yEndTime, orderStatus, param,
+					pageNo, pageSize, sqlKey, orders);
 		} catch (Exception e) {
 			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, e.getMessage());
 		}
@@ -93,8 +97,14 @@ public class OrderRecordController {
 		PageResult pageResult = PageResultUtil.getSuccessPageResult(page.getRowCount(), page.getPageSize(), pageNo,
 				page.getResult(), "success");
 
-		returnMsg = CharacterEncodeUtil.returnEncode(FastJsonUtil.toJSONString(pageResult));
-		return returnMsg;
+		List<Map<String, Object>> list = pageResult.getList();
+		for (Map<String, Object> map : list) {
+			map.put("KSMC", CharacterEncodeUtil.returnEncode(MapUtils.getString(map, "KSMC", "")));
+			map.put("BRMC", CharacterEncodeUtil.returnEncode(MapUtils.getString(map, "BRMC", "")));
+			map.put("YSMC", CharacterEncodeUtil.returnEncode(MapUtils.getString(map, "YSMC", "")));
+		}
+		
+		return FastJsonUtil.toJSONString(pageResult);
 	}
 
 	@ExceptionHandler(value = { Exception.class })
@@ -110,5 +120,4 @@ public class OrderRecordController {
 		}
 		return FastJsonUtil.toJSONString(PageResultUtil.getFailPageResult(0L, 0, 0, null, ex.getMessage()));
 	}
-
 }

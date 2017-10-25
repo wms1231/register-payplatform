@@ -796,7 +796,7 @@ public class DateUtils {
 	 */
 	public static String getDefaultQueryTime(String date, boolean isStart) {
 		if (StringUtils.isBlank(date)) {
-			throw new RuntimeException("date日期字符串不能为空");
+			return "";
 		}
 		if (!date.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
 			throw new RuntimeException("date日期字符串不满足默认的yyyy-MM-dd格式");

@@ -61,19 +61,21 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 
 	@Override
 	public void download(HttpServletResponse response, String register, String beginTime, String endTime,
-			String orderStatus, Map<String, Object> param, String sqlKey, String[] orders) {
-		
-		List<String> headList = Arrays.asList("订单号", "手机号", "患者姓名", "身份证号", "预约来源", "预约状态", "专家姓名", "预约科室", "下单日期",
-				"预约日期", "操作员工号", "操作员姓名");
+			String yBeginTime, String yEndTime, String orderStatus, Map<String, Object> param, String sqlKey,
+			String[] orders) {
 
-		List<Map<String, Object>> orderRecordQuery = orderRecordQuery(register, beginTime, endTime, orderStatus, param,
-				sqlKey, orders);
-		
+		List<String> headList = Arrays.asList("订单号", "手机号", "患者姓名", "身份证号", "预约来源", "预约状态", "专家姓名", "预约科室", "下单日期",
+				"预约日期", "操作员工号", "取消员工号");
+
+		List<Map<String, Object>> orderRecordQuery = orderRecordQuery(register, beginTime, endTime, yBeginTime,
+				yEndTime, orderStatus, param, sqlKey, orders);
+
 		orderExport(orderRecordQuery, headList, response);
 	}
 
 	@Override
-	public void orderExport(List<Map<String, Object>> orderRecordQueryList,List<String> headList,HttpServletResponse response) {
+	public void orderExport(List<Map<String, Object>> orderRecordQueryList, List<String> headList,
+			HttpServletResponse response) {
 		List<List<String>> bodyList = new ArrayList<List<String>>();
 		for (Map<String, Object> map : orderRecordQueryList) {
 			List<String> itemRowList = new ArrayList<>();
@@ -85,10 +87,10 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 			itemRowList.add(MapUtils.getString(map, "YYZT", ""));
 			itemRowList.add(CharacterEncodeUtil.returnEncode(MapUtils.getString(map, "YSMC", "")));
 			itemRowList.add(CharacterEncodeUtil.returnEncode(MapUtils.getString(map, "KSMC", "")));
-			itemRowList.add(MapUtils.getString(map, "GHRQ", ""));
+			itemRowList.add(MapUtils.getString(map, "XDRQ", ""));
 			itemRowList.add(MapUtils.getString(map, "YYRQ", ""));
 			itemRowList.add(MapUtils.getString(map, "CZGH", ""));
-			itemRowList.add(MapUtils.getString(map, "CZMC", ""));
+			itemRowList.add(MapUtils.getString(map, "QXGH", ""));
 			bodyList.add(itemRowList);
 		}
 		// 创建工作簿
@@ -98,20 +100,23 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 
 	@Override
 	public List<Map<String, Object>> orderRecordQuery(String register, String beginTime, String endTime,
-			String orderStatus, Map<String, Object> param, String sqlKey, String[] orders) {
-		valid(register, orders, beginTime, endTime, orderStatus);
+			String yBeginTime, String yEndTime, String orderStatus, Map<String, Object> param, String sqlKey,
+			String[] orders) {
+		valid(register, orders, beginTime, endTime, yBeginTime, yEndTime, orderStatus);
 		return commonService.selectList(sqlKey, null, param, orders);
 	}
 
 	@Override
-	public Pager orderRecordQueryWithPage(String register, String beginTime, String endTime, String orderStatus,
-			Map<String, Object> param, Integer pageNo, Integer pageSize, String sqlKey, String[] orders) {
-		valid(register, orders, beginTime, endTime, orderStatus);
+	public Pager orderRecordQueryWithPage(String register, String beginTime, String endTime, String yBeginTime,
+			String yEndTime, String orderStatus, Map<String, Object> param, Integer pageNo, Integer pageSize,
+			String sqlKey, String[] orders) {
+		valid(register, orders, beginTime, endTime, yBeginTime, yEndTime, orderStatus);
 		return commonService.selectListByPage(sqlKey, null, param, pageNo, pageSize, orders);
 	}
 
 	@Override
-	public void valid(String register, String[] orders, String beginTime, String endTime, String orderStatus) {
+	public void valid(String register, String[] orders, String beginTime, String endTime, String yBeginTime,
+			String yEndTime, String orderStatus) {
 		// register 校验用户是否存在 暂时不加
 
 		if (orders != null && orders.length > 0) {
@@ -122,19 +127,36 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 				}
 			}
 		}
-
-		if (!beginTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
-			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "beginTime日期字符串不满足默认的yyyy-MM-dd格式");
+		
+		if(StringUtils.isNotBlank(beginTime)){
+			if (!beginTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
+				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "xBeginTime日期字符串不满足默认的yyyy-MM-dd格式");
+			}
 		}
-
-		if (!endTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
-			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "date日期字符串不满足默认的yyyy-MM-dd格式");
+		
+		if(StringUtils.isNotBlank(endTime)){
+			if (!endTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
+				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "xEndTime日期字符串不满足默认的yyyy-MM-dd格式");
+			}
 		}
+		
+		if(StringUtils.isNotBlank(yBeginTime)){
+			if (!yBeginTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
+				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "yBeginTime日期字符串不满足默认的yyyy-MM-dd格式");
+			}
+		}
+		
+		if(StringUtils.isNotBlank(yEndTime)){
+			if (!yEndTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
+				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "yEndTime日期字符串不满足默认的yyyy-MM-dd格式");
+			}
+		}
+		
 
 		if (StringUtils.isNotBlank(orderStatus)) {
-			List<String> asList = Arrays.asList("1", "2", "3", "4", "5");
+			List<String> asList = Arrays.asList("0", "1", "2", "3", "4", "5");
 			if (!asList.contains(orderStatus)) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "orderStatus状态只能为1,2,3,4,5");
+				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "orderStatus状态只能为0,1,2,3,4,5");
 			}
 		}
 
