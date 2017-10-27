@@ -13,8 +13,4 @@
 		address="http://172.20.20.35/csp/i-his/DHC.HIS.BS.HISWebService.cls"
 		serviceClass="com.bsoft.client.mscf.HISWebServiceSoap" />
 
-	<!-- 调用发送短信webservice -->
-	<jaxws:client id="sendMessageService"
-		address="http://172.20.16.156:5813/services/cmcc_mas_wbs"
-		serviceClass="org.csapi.service.CmccMasWbs" />
 </beans>   

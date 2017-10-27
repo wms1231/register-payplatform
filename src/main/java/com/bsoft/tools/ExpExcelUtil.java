@@ -82,8 +82,8 @@ public class ExpExcelUtil {
 			row++;
 			HSSFCell headerCell = headRow.createCell(0);
 			headerCell.setCellValue(headTitle);
-			headerCell.setCellStyle(headStyle);
-			hssfSheet.autoSizeColumn(0);
+			//headerCell.setCellStyle(headStyle);
+			//hssfSheet.autoSizeColumn(0);
 			// 参数1：行号 参数2：起始列号 参数3：行号 参数4：终止列号
 			CellRangeAddress cellRangeAddress = new CellRangeAddress(0, 0, 0, length);
 			headRow.setHeight(HEAD_ROW_HEIGHT);
@@ -98,8 +98,8 @@ public class ExpExcelUtil {
 		for (int i = 0; i < titleList.size(); i++) {
 			HSSFCell cell = titleRow.createCell(i);
 			cell.setCellValue(titleList.get(i));
-			cell.setCellStyle(titleStyle);
-			hssfSheet.autoSizeColumn(i);
+			//cell.setCellStyle(titleStyle);
+			//hssfSheet.autoSizeColumn(i);
 		}
 		// 循环生成具体内容行的具体列
 		for (int i = 0; i < rowList.size(); i++) {
@@ -110,8 +110,8 @@ public class ExpExcelUtil {
 			for (int j = 0; j < cellList.size(); j++) {
 				HSSFCell cell = hssfRow.createCell(j);
 				cell.setCellValue(cellList.get(j));
-				cell.setCellStyle(contentStyle);
-				hssfSheet.autoSizeColumn(i);
+				//cell.setCellStyle(contentStyle);
+				//hssfSheet.autoSizeColumn(i);
 			}
 			// 测试使用
 			System.out.println("已经生成列数：" + i);

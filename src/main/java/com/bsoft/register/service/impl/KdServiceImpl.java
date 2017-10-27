@@ -5,15 +5,12 @@ import java.sql.Blob;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bsoft.constant.AppCommonConstant;
 import com.bsoft.exception.HandPayException;
 import com.bsoft.register.service.KdService;

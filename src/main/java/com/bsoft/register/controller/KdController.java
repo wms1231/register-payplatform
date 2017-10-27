@@ -2,9 +2,7 @@ package com.bsoft.register.controller;
 
 import java.util.Date;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bsoft.constant.AppCommonConstant;
 import com.bsoft.constant.CommonConstant;
 import com.bsoft.register.service.KdService;
@@ -30,7 +27,7 @@ import com.bsoft.tools.ResultMessageUtil;
 @RequestMapping("/kd")
 public class KdController {
 
-	private static Logger logger = Logger.getLogger(HandPayController.class);
+	private static Logger logger = Logger.getLogger(KdController.class);
 	@Autowired
 	private KdService kdService;
 
