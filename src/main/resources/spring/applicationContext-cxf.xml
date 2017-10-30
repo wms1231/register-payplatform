@@ -7,10 +7,15 @@
 				            http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
 				            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
 				            http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
-	<!-- 配置spring-cxf客户端 -->
-	<!-- 调用东华webservice -->
+	<!-- 配置spring-cxf客户端 client -->
+
+	<!-- 调用东华webService 正式 -->
 	<jaxws:client id="hisWebService"
-		address="http://172.20.20.35/csp/i-his/DHC.HIS.BS.HISWebService.cls"
+		address="http://172.20.20.6/csp/i-his/DHC.HIS.BS.HISWebService.cls"
 		serviceClass="com.bsoft.client.mscf.HISWebServiceSoap" />
 
+	<!-- 调用发送短信webService -->
+	<jaxws:client id="sendMessageDao"
+		address="http://172.20.16.156:5813/services/cmcc_mas_wbs"
+		serviceClass="com.bsoft.client.service.CmccMasWbs" />
 </beans>   
