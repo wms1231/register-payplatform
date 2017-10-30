@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bsoft.constant.AppCommonConstant;
+import com.bsoft.constant.AppCommonConst;
 import com.bsoft.support.Pager;
 import com.bsoft.support.service.ICommonService;
 import com.bsoft.tools.CharacterEncodeUtil;
@@ -160,7 +160,7 @@ public class TestProController {
 		}
 		// 移除自定义字段，防止意外异常
 		requestMap.remove("code2");
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_CHK_YSPB);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_CHK_YSPB);
 
 		String requestStr = FastJsonUtil.toJSONString(requestMap);
 		Map<String, Object> param = new HashMap<>();
@@ -168,7 +168,7 @@ public class TestProController {
 		Object obj = new Object();
 		param.put("msg", "");
 		param.put("output", obj);
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
 
 		commonService.selectOne("callpro.yspb2", null, param);
 		param.put("msg", CharacterEncodeUtil.returnEncode((String) param.get("msg")));
@@ -209,7 +209,7 @@ public class TestProController {
 		String jsonStr = null;
 		try {
 			// 秘钥
-			String key = AppCommonConstant.SYSTEM_APP_SECRET_KEY + timestamp;
+			String key = AppCommonConst.SYSTEM_APP_SECRET_KEY + timestamp;
 			// 解密
 			jsonStr = DecryptUtil.decryptToString(key, aclContent);
 		} catch (Exception e) {
@@ -222,7 +222,7 @@ public class TestProController {
 
 		// 安全性检测
 		try {
-			String checkAcl = HttpRequestProxy.getACL(AppCommonConstant.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
+			String checkAcl = HttpRequestProxy.getACL(AppCommonConst.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
 			// 进行url加密，比如 / 转码为 %2F
 			String encodeAcl = URLEncoder.encode(acl, "utf-8");
 			if (StringUtils.isNotBlank(checkAcl) || StringUtils.isNotBlank(encodeAcl)) {

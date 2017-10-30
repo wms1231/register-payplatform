@@ -1,23 +1,28 @@
 package com.bsoft.register.service.impl;
 
-import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
+import com.bsoft.constant.PayServiceConst;
+import com.bsoft.constant.PaySourceConst;
 import com.bsoft.domain.HeadBean;
+import com.bsoft.exception.MessageException;
+import com.bsoft.exception.PayException;
 import com.bsoft.factory.BeanService;
 import com.bsoft.register.service.AppointedService;
 import com.bsoft.register.service.PayService;
+import com.bsoft.register.service.SendMessageService;
 import com.bsoft.support.service.ICommonService;
 import com.bsoft.tools.CharacterEncodeUtil;
 import com.bsoft.tools.DateUtils;
@@ -36,14 +41,6 @@ public class PayServiceImpl implements PayService {
 	private String orderquery;
 	@Value("${signUrlCode}")
 	private String signUrlCode;
-	@Value("${ApplicationID}")
-	private String ApplicationID;
-	@Value("${msgFmt}")
-	private Byte msgFmt;
-	@Value("${reqDeliveryReport}")
-	private int reqDeliveryReport;
-	@Value("${sendMethod}")
-	private int sendMethod;
 	@Value("${refund}")
 	private String refund;
 	@Value("${msg}")
@@ -58,10 +55,8 @@ public class PayServiceImpl implements PayService {
 	private String nextVisitSelfPaySuccessMsg;
 	@Value("${nextVisitNoSelfPaySuccessMsg}")
 	private String nextVisitNoSelfPaySuccessMsg;
-
 	@Value("${creamPaySuccessMsg}")
 	private String creamPaySuccessMsg;
-
 	@Value("${termOfValidity}")
 	private String termOfValidity;
 	@Value("${CallBack}")
@@ -80,6 +75,9 @@ public class PayServiceImpl implements PayService {
 	@Autowired
 	private ICommonService commonService;
 
+	@Autowired
+	private SendMessageService sendMessageService;
+
 	/**
 	 * 刷卡支付
 	 * 
@@ -88,23 +86,20 @@ public class PayServiceImpl implements PayService {
 	 * @return
 	 */
 	public String trade_pay(HttpServletRequest request, HttpServletResponse response) {
-		String payService = "1";// 支付类型，1表示表示
-		String paySource = "1";// 窗口支付
-		String auth_code = RequestDataUtil.getRequestParmByParameter(request, "auth_code");// 支付二维码
-		String hospNo = RequestDataUtil.getRequestParmByParameter(request, "hospNo");// 医院订单号
-		String paymoney = RequestDataUtil.getRequestParmByParameter(request, "paymoney");// 支付金额
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("organizationCode", CommonConstant.PAY_12580_ORGANIZATION_CODE);
-		map.put("computerName", CommonConstant.PAY_12580_COMPUTER_NAME);
-		map.put("ip", CommonConstant.PAY_12580_IP);
-		map.put("payService", payService);
-		map.put("auth_code", auth_code);
-		map.put("hospNo", hospNo);
-		map.put("paymoney", paymoney);
-		map.put("paySource", paySource);
-		String data = RequestDataUtil.generatorRequestXml(map);
-		logger.info("刷卡支付url=>trade_pay,支付订单=>" + hospNo + " 交易结果=>" + data);
-		return HttpUtil.postData(pay_url, data);
+		String payService = PayServiceConst.GHYW;
+		String paySource = PaySourceConst.CKZF;
+		// 支付二维码
+		String auth_code = RequestDataUtil.getRequestParmByParameter(request, "auth_code");
+		String hospNo = RequestDataUtil.getRequestParmByParameter(request, "hospNo");
+		String paymoney = RequestDataUtil.getRequestParmByParameter(request, "paymoney");
+
+		Map<String, String> param = RequestDataUtil.getMapByStringParam(
+				Arrays.asList("organizationCode", "computerName", "ip", "payService", "auth_code", "hospNo", "paymoney",
+						"paySource"),
+				Arrays.asList(CommonConst.PAY_ORGANIZATION_CODE, CommonConst.PAY_COMPUTER_NAME, CommonConst.PAY_IP,
+						payService, auth_code, hospNo, paymoney, paySource));
+
+		return HttpUtil.postData(pay_url, RequestDataUtil.generatorRequestXml(param));
 	}
 
 	/**
@@ -115,15 +110,13 @@ public class PayServiceImpl implements PayService {
 	 * @return
 	 */
 	public String orderquery(HttpServletRequest request, HttpServletResponse response) {
-		String hospNo = RequestDataUtil.getRequestParmByParameter(request, "hospNo");// 医院订单号
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("hospNo", hospNo);
-		map.put("organizationCode", CommonConstant.PAY_12580_ORGANIZATION_CODE);
-		map.put("computerName", CommonConstant.PAY_12580_COMPUTER_NAME);
-		map.put("ip", CommonConstant.PAY_12580_IP);
-		String data = RequestDataUtil.generatorRequestXml(map);
-		logger.info("查询订单url=>orderquery,查询订单" + hospNo + " 查询结果" + data);
-		return HttpUtil.postData(orderquery, data);
+		String hospNo = RequestDataUtil.getRequestParmByParameter(request, "hospNo");
+
+		Map<String, String> param = RequestDataUtil.getMapByStringParam(
+				Arrays.asList("hospNo", "organizationCode", "computerName", "ip"), Arrays.asList(hospNo,
+						CommonConst.PAY_ORGANIZATION_CODE, CommonConst.PAY_COMPUTER_NAME, CommonConst.PAY_IP));
+
+		return HttpUtil.postData(orderquery, RequestDataUtil.generatorRequestXml(param));
 	}
 
 	/**
@@ -134,19 +127,16 @@ public class PayServiceImpl implements PayService {
 	 * @return
 	 */
 	public String refund(HttpServletRequest request, HttpServletResponse response) {
-		String hospNo = RequestDataUtil.getRequestParmByParameter(request, "hospNo");// 医院订单号
+		String hospNo = RequestDataUtil.getRequestParmByParameter(request, "hospNo");
 		String refund_fee = RequestDataUtil.getRequestParmByParameter(request, "refund_fee");
 		String out_request_no = RequestDataUtil.getRequestParmByParameter(request, "out_request_no");
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("organizationCode", CommonConstant.PAY_12580_ORGANIZATION_CODE);
-		map.put("computerName", CommonConstant.PAY_12580_COMPUTER_NAME);
-		map.put("ip", CommonConstant.PAY_12580_IP);
-		map.put("hospNo", hospNo);
-		map.put("out_request_no", out_request_no);
-		map.put("refund_fee", refund_fee);
-		String data = RequestDataUtil.generatorRequestXml(map);
-		logger.info("退款交易url=>refund,退款订单=>" + hospNo + " 退款请求参数=>" + data);
-		return HttpUtil.postData(refund, data);
+
+		Map<String, String> param = RequestDataUtil.getMapByStringParam(
+				Arrays.asList("organizationCode", "computerName", "ip", "hospNo", "out_request_no", "refund_fee"),
+				Arrays.asList(CommonConst.PAY_ORGANIZATION_CODE, CommonConst.PAY_COMPUTER_NAME, CommonConst.PAY_IP,
+						hospNo, out_request_no, refund_fee));
+
+		return HttpUtil.postData(refund, RequestDataUtil.generatorRequestXml(param));
 	}
 
 	/**
@@ -157,29 +147,16 @@ public class PayServiceImpl implements PayService {
 	 * @return
 	 */
 	public String refundmessage(HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jObj = new JSONObject();
-		jObj.put("code", 0);
-		jObj.put("msg", "success");
 		String phoneNum = RequestDataUtil.getRequestParmByParameter(request, "phonenum");
 		String messageContent = MessageGenerator.generatorMessageContent(request, null, msg2);
+		String requestIdentifier = "";
 		if (StringUtils.isNotBlank(phoneNum)) {
-			try {
-				MessageUtils.sendMessage("jdbc.properties", phoneNum, messageContent, msgFmt, "",
-						new Timestamp(System.currentTimeMillis()), ApplicationID, phoneNum + System.nanoTime(),
-						reqDeliveryReport, sendMethod, this.getClass());
-			} catch (Exception e) {
-				jObj.put("code", -1);
-				jObj.put("msg", "短信发送异常");
-				logger.error("退款通知短信发送异常", e);
-				return jObj.toJSONString();
-			}
+			requestIdentifier = sendMessageService.sendLongMess(messageContent, phoneNum);
 		} else {
-			jObj.put("code", -1);
-			jObj.put("msg", "请传入电话号码");
-			logger.error("退款通知短信电话为空=>" + phoneNum + " 通知内容=>" + messageContent);
-			return jObj.toJSONString();
+			throw new MessageException("-1", "电话号码为空");
+
 		}
-		return jObj.toJSONString();
+		return requestIdentifier;
 	}
 
 	/**
@@ -190,13 +167,14 @@ public class PayServiceImpl implements PayService {
 	 * @return
 	 */
 	public String sendmessage(HttpServletRequest request, HttpServletResponse response, String callBackUrl) {
-		JSONObject jObj = new JSONObject();// 设置默认值
+		JSONObject jObj = new JSONObject();
 		jObj.put("code", 0);
 		jObj.put("msg", "success");
-		String payService = "1";// 1.表示预约
-		String paySource = "5";
-		Map<String, Object> mesMap = appointedService.getMessinfo(request);// 默认数据库取数据
-		
+
+		String payService = PayServiceConst.GHYW;
+		String paySource = PaySourceConst.DXZF;
+		Map<String, Object> mesMap = appointedService.getMessinfo(request);
+
 		if (mesMap != null) {// 非第一次发送短信
 			String newPhone = RequestDataUtil.getRequestParmByParameter(request, "phonenum");// 如果电话号码变了,需要更新
 			String oldPhone = (String) mesMap.get("PHONENUM");
@@ -204,76 +182,58 @@ public class PayServiceImpl implements PayService {
 			oldPhone = oldPhone == null ? "o" : oldPhone;
 			if (!oldPhone.equals(newPhone)) {// 如果电话号码有变，更新电话
 				if (appointedService.updateMessinfo(request) != 1) {// 更新短信信息
-					jObj.put("code", -1);
-					jObj.put("msg", "更新电话号码失败");
-					return jObj.toJSONString();
+					throw new PayException("-1", "更新电话号码失败");
 				}
 			}
 			String newUrl = (String) mesMap.get("URL");// url特殊处理
 			newUrl = RequestDataUtil.replaceDomainAndPort(domain, port, newUrl);
 			String newMessageContent = MessageGenerator.generatorMessageContent(request, newUrl, msg);// 发送短息准备
 			try {
-				MessageUtils.sendMessage("jdbc.properties", newPhone, newMessageContent, msgFmt, "",
-						new Timestamp(System.currentTimeMillis()), ApplicationID, newPhone + System.nanoTime(),
-						reqDeliveryReport, sendMethod, this.getClass());
+				sendMessageService.sendLongMess(newMessageContent, newPhone);
+				logger.info("12580 预约成功后补发短信通知url=>sendmessage,通知电话=>" + newPhone + " 通知内容=>" + newMessageContent);
 			} catch (Exception e) {
-				jObj.put("code", -1);
-				jObj.put("msg", "短信发送异常");
-				logger.error("12580 发送短信异常", e);
-				return jObj.toJSONString();
+				throw e;
 			}
-			logger.info("12580 预约成功后补发短信通知url=>sendmessage,通知电话=>" + newPhone + " 通知内容=>" + newMessageContent);
+
 		} else {
 			// 第一次发送短信
 			String hospNo = RequestDataUtil.getRequestParmByParameter(request, "hospNo");
-			String paymoney = RequestDataUtil.getRequestParmByParameter(request, "paymoney");// 支付金额
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("payService", payService);
-			map.put("organizationCode", CommonConstant.PAY_12580_ORGANIZATION_CODE);
-			map.put("computerName", CommonConstant.PAY_12580_COMPUTER_NAME);
-			map.put("ip", CommonConstant.PAY_12580_IP);
-			map.put("hospNo", hospNo);
-			map.put("paymoney", paymoney);
-			map.put("termOfValidity", termOfValidity);
+			String paymoney = RequestDataUtil.getRequestParmByParameter(request, "paymoney");
 
-			
+			Map<String, String> param = RequestDataUtil.getMapByStringParam(
+					Arrays.asList("payService", "organizationCode", "computerName", "ip", "hospNo", "paymoney",
+							"termOfValidity", "paySource"),
+					Arrays.asList(payService, CommonConst.PAY_ORGANIZATION_CODE, CommonConst.PAY_COMPUTER_NAME,
+							CommonConst.PAY_IP, hospNo, paymoney, termOfValidity, paySource));
+
 			if ("1".equals(callBackUrl)) {
-				map.put("callback", CallBack);
+				param.put("callback", CallBack);
 			} else if ("2".equals(callBackUrl)) {
 				// 注入膏方回调
-				map.put("callback", callCreamBack);
+				param.put("callback", callCreamBack);
 			}
 
-			map.put("paySource", paySource);
-			String data = RequestDataUtil.generatorRequestXml(map);// xml数据转换
-			String ret = HttpUtil.postData(paypage, data);// 调用支付接口获取支付url地址
+			String ret = HttpUtil.postData(paypage, RequestDataUtil.generatorRequestXml(param));
+
 			JSONObject json = JSONObject.parseObject(ret);
 			if (StringUtil.isEmpty(ret) || !json.get("code").equals("200")) {
-				jObj.put("code", -1);
-				jObj.put("msg", "获取URL失败");
-				return jObj.toJSONString();
+				throw new PayException("-1", ret);
 			}
 			String URL = (String) json.get("urlCode");// 支付URL
 			URL = RequestDataUtil.replaceDomainAndPort(domain, port, URL);
 			String phoneNum = RequestDataUtil.getRequestParmByParameter(request, "phonenum");
 			if (appointedService.saveMessinfo(request, URL) != 1) {// 保存信息到数据库,如果不为1失败
-				jObj.put("code", -1);
-				jObj.put("msg", "保存短信到失败");
-				return jObj.toJSONString();
+				throw new PayException("-1", "保存短信到失败");
 			}
 
-			String messageContent = MessageGenerator.generatorMessageContent(request, URL, msg);
 			try {
-				MessageUtils.sendMessage("jdbc.properties", phoneNum, messageContent, msgFmt, "",
-						new Timestamp(System.currentTimeMillis()), ApplicationID, phoneNum + System.nanoTime(),
-						reqDeliveryReport, sendMethod, this.getClass());
+				String messageContent = MessageGenerator.generatorMessageContent(request, URL, msg);
+				sendMessageService.sendLongMess(messageContent, phoneNum);
+				logger.info("12580 预约成功后短信通知url=>sendmessage,通知电话=>" + phoneNum + " 通知内容=>" + messageContent);
 			} catch (Exception e) {
-				jObj.put("code", -1);
-				jObj.put("msg", "短信发送异常");
-				logger.error("12580 发送短信异常", e);
-				return jObj.toJSONString();
+				throw e;
 			}
-			logger.info("12580 预约成功后短信通知url=>sendmessage,通知电话=>" + phoneNum + " 通知内容=>" + messageContent);
+
 		}
 		return jObj.toJSONString();
 
@@ -286,33 +246,19 @@ public class PayServiceImpl implements PayService {
 	 * @param response
 	 * @return
 	 */
-	public String callback(HttpServletRequest request, HttpServletResponse response) {
-		JSONObject map = null;
-		JSONObject json = new JSONObject();// 这里设置返回值是为了程序扩展
-		json.put("code", 0);
-		json.put("msg", "success");
-		String payFlag = "1";// 默认设置为1
-		boolean isSuccess = true;// 默认表示同步数据成功
-		try {
-			map = RequestDataUtil.getRequestData(request);
-		} catch (Exception e) {
-			isSuccess = false;
-			map = new JSONObject();// 防止程序崩溃
-			logger.error("callback==》请求转换失败", e);
+	public void callback(HttpServletRequest request, HttpServletResponse response, int flag) {
+		String payFlag = "1";
+		boolean isSuccess = true;
+
+		JSONObject map = RequestDataUtil.getRequestData(request);
+		if (!"200".equals(map.getString("code"))) {
+			payFlag = "2";// 失败状态也更新
 		}
-		if (!"200".equals(map.getString("code"))) {// 反参是错误的也会更新到数据
-			payFlag = "2";
-		}
-		String hospNo = RequestDataUtil.getStringByKey(map, "hospNo");// 医院订单号
+		String hospNo = RequestDataUtil.getStringByKey(map, "hospNo");
 		String payType = RequestDataUtil.getStringByKey(map, "payType");
 		String paymoney = RequestDataUtil.getStringByKey(map, "paymoney");
 		String payTime = RequestDataUtil.getStringByKey(map, "payTime");
-		// String verifyNo = RequestDataUtil.getStringByKey(map, "payTime");
-		String methodName = "callback";
-		Date beginTime = new Date();
-		logger.info("开始调用回调接口" + methodName + " 订单号为:" + hospNo + ":时间为:"
-				+ DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(beginTime) + ",请求参数为:" + "订单号=>" + hospNo + " 支付金额=>"
-				+ paymoney + " 支付类型=>" + payType + " 支付时间=>" + payTime + ",时间标记为[" + beginTime.getTime() + "]");
+
 		if ("1".equals(payType)) {
 			payType = "ZFBPay";
 		} else if ("2".equals(payType)) {
@@ -320,108 +266,57 @@ public class PayServiceImpl implements PayService {
 		} else {
 			payType = "YFK";
 		}
-		if (StringUtils.isBlank(hospNo)) {// 订单号不能为空
+
+		if (StringUtils.isBlank(hospNo)) {
 			isSuccess = false;
 			logger.error("订单号为空,订单号=>" + hospNo);
 		}
-		HeadBean bean = null;
+
 		if (isSuccess) {
+			// 通知his同步数据
 			BeanService bshisservice = null;
 			try {
 				bshisservice = appointedService.Notification(hospNo, null, payType, paymoney, hospNo, payTime, payFlag);
-			} catch (Exception e) {
-				logger.error("其它异常=>", e);
-				json.put("code", -1);
-				if (bshisservice.getHead() != null) {
-					json.put("msg", bshisservice.getHead().getResultMessage());
-				}
-			} // 通知his同步数据
-			bean = bshisservice.getHead();
-			if (!"0000".equals(bean.getResultCode())) {// 获取状态码
-				int counter = 1;
-				while (counter < CommonConstant.NOTIFICATION_12580_TIMES) {
-					try {
+				HeadBean bean = bshisservice.getHead();
+				// 不成功 多更新几次
+				if (!"0000".equals(bean.getResultCode())) {
+					int counter = 1;
+					while (counter < CommonConst.NOTIFICATION_12580_TIMES) {
 						bshisservice = appointedService.Notification(hospNo, null, payType, paymoney, hospNo, payTime,
 								payFlag);
-					} catch (Exception e) {
-						logger.error("其它异常=>", e);
-						json.put("code", -1);
-						if (bshisservice.getHead() != null) {
-							json.put("msg", bshisservice.getHead().getResultMessage());
-						}
-					}
-					bean = bshisservice.getHead();
-					if ("0000".equals(bean.getResultCode()) || "003D".equals(bean.getResultCode())) {
-						break;
-					}
-					counter++;
-				}
-				if (counter >= CommonConstant.NOTIFICATION_12580_TIMES) {
-					isSuccess = false;
-				} else {
-					isSuccess = true;
-				}
-			}
-		}
-		// 同步成功,才进一步发送短信
-		if (isSuccess) {
-			Map<String, Object> param = new HashMap<>();
-			param.put("HOSPNO", hospNo);
-			Map<String, Object> msgmap = commonService.selectOne("msginfo.findMsgInfo", null, param);// 查询短信发送内容
-			Map<String, Object> addMap = commonService.selectOne("cancelPay.queryAddressByNo", null, param);// 查询科室地址
-			// 获取诊疗地址信息
-			String address = CharacterEncodeUtil.returnEncode(RequestDataUtil.getValueForKey(addMap, "ADDRESS"));
-			String phoneNum = RequestDataUtil.getValueForKey(msgmap, "PHONENUM");
-			if (StringUtils.isNotBlank(phoneNum)) {
-				// 更加是否初诊和自费以及非自费选择不同的模板发送短信
-				Map<String, Object> patNatureMap = commonService.selectOne("message.queryPatNature", null, param);
 
-				String visitFlag = RequestDataUtil.getValueForKey(patNatureMap, "VISITFLAG");
-				String chargeFlag = RequestDataUtil.getValueForKey(patNatureMap, "CHARGEFLAG");
-				String messageContent = "";
-				if ("2".equals(visitFlag)) { // 初诊病人
-					messageContent = MessageUtils.generateMutiMessage(msgmap, firstVisitPaySuccessMsg);
-				} else {
-					if ("1000".equals(chargeFlag)) {// 自费病人
-						messageContent = MessageUtils.generateMutiMessage(msgmap, nextVisitSelfPaySuccessMsg);
-					} else {// 非自费病人
-						messageContent = MessageUtils.generateMutiMessage(msgmap, nextVisitNoSelfPaySuccessMsg);
+						bean = bshisservice.getHead();
+						if ("0000".equals(bean.getResultCode()) || "003D".equals(bean.getResultCode())) {
+							break;
+						}
+						counter++;
+					}
+
+					if (counter >= CommonConst.NOTIFICATION_12580_TIMES) {
+						isSuccess = false;
 					}
 				}
-				try {
-					// 不为空 且 包含江苏省中医院
-					if (StringUtils.isNotBlank(messageContent) && messageContent.matches(".*江苏省中医院.*")) {
-						messageContent = messageContent.replaceAll("江苏省中医院", address);
-					}
-					// 一切发送成功然后发送短息
-					MessageUtils.sendMessage("jdbc.properties", phoneNum, messageContent, msgFmt, "",
-							new Timestamp(System.currentTimeMillis()), ApplicationID, phoneNum + System.nanoTime(),
-							reqDeliveryReport, sendMethod, this.getClass());
-				} catch (Exception e) {
-					json.put("code", -1);
-					json.put("msg", "短信发送异常");
-					logger.error("12580 发送短信异常", e);
-					return json.toJSONString();
-				}
-				Date endTime = new Date();
-				logger.info("调用接口" + methodName + "订单号为=>" + hospNo + "结束:时间为:"
-						+ DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求参数为:" + "电话号码为=>" + phoneNum
-						+ " 发送内容为=>" + messageContent + ",时间标记为[" + beginTime.getTime() + "]");
-			} else {
-				logger.error(hospNo + "号订单回调通知失败,失败原因:电话号码为空,电话号码为phoneNum=>" + phoneNum);
+
+			} catch (Exception e1) {
+				throw new PayException("-1", bshisservice.getHead().getResultMessage());
 			}
+
 		}
-		if (!isSuccess) {// 做一个简单的反参处理
-			if (bean != null) {
-				json.put("code", bean.getResultCode());
-				json.put("msg", bean.getResultMessage());
-				logger.error(hospNo + "号订单回调通知失败,失败原因:返回参数=>" + json.toJSONString());
-			} else {
-				logger.error("程序转换异常或者订单号为空!");
+
+		// 同步成功,才进一步发送短信
+		String sendOrderMessage = "";
+		if (isSuccess) {
+			if (flag == 1) {
+				sendOrderMessage = sendOrderMessage(hospNo);
+			} else if (flag == 2) {
+				sendOrderMessage = sendCreamOrderMessage(hospNo);
 			}
+
+			logger.info("订单号=>" + hospNo + "在" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(new Date())
+					+ " 发送短信,短信内容=>" + sendOrderMessage);
+
 		}
-		logger.info(hospNo + "号订单回调同步数据成功,反参=>" + json.toJSONString());
-		return json.toJSONString();
+
 	}
 
 	/**
@@ -431,121 +326,82 @@ public class PayServiceImpl implements PayService {
 	 * @param response
 	 * @return
 	 */
-	public String callCreamBack(HttpServletRequest request, HttpServletResponse response) {
-		JSONObject map = null;
-		JSONObject json = new JSONObject();// 这里设置返回值是为了程序扩展
-		json.put("code", 0);
-		json.put("msg", "success");
-		String payFlag = "1";// 默认设置为1
-		boolean isSuccess = true;// 默认表示同步数据成功
-		try {
-			map = RequestDataUtil.getRequestData(request);
-		} catch (Exception e) {
-			isSuccess = false;
-			map = new JSONObject();// 防止程序崩溃
-			logger.error("callback==》请求转换失败", e);
-		}
-		if (!"200".equals(map.getString("code"))) {// 反参是错误的也会更新到数据
-			payFlag = "2";
-		}
-		String hospNo = RequestDataUtil.getStringByKey(map, "hospNo");// 医院订单号
-		String payType = RequestDataUtil.getStringByKey(map, "payType");
-		String paymoney = RequestDataUtil.getStringByKey(map, "paymoney");
-		String payTime = RequestDataUtil.getStringByKey(map, "payTime");
-		// String verifyNo = RequestDataUtil.getStringByKey(map, "payTime");
-		String methodName = "callCreamBack";
-		Date beginTime = new Date();
-		logger.info("开始调用回调接口" + methodName + " 订单号为:" + hospNo + ":时间为:"
-				+ DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(beginTime) + ",请求参数为:" + "订单号=>" + hospNo + " 支付金额=>"
-				+ paymoney + " 支付类型=>" + payType + " 支付时间=>" + payTime + ",时间标记为[" + beginTime.getTime() + "]");
-		if ("1".equals(payType)) {
-			payType = "ZFBPay";
-		} else if ("2".equals(payType)) {
-			payType = "WXPay";
+	public void callCreamBack(HttpServletRequest request, HttpServletResponse response) {
+		callback(request, response, 2);
+	}
+
+	/**
+	 * 发送刚放预约短信
+	 * 
+	 * @param hospNo
+	 * @return
+	 */
+	private String sendCreamOrderMessage(String hospNo) {
+		Map<String, Object> param = RequestDataUtil.getMapByInputParam(Arrays.asList("HOSPNO"), Arrays.asList(hospNo));
+		// 查询短信发送内容
+		Map<String, Object> msgmap = commonService.selectOne("msginfo.findMsgInfo", null, param);
+		String phoneNum = RequestDataUtil.getValueForKey(msgmap, "PHONENUM");
+		String messageContent = "";
+		if (StringUtils.isNotBlank(phoneNum)) {
+			messageContent = MessageUtils.generateCreamMessage(msgmap, creamPaySuccessMsg);
+			sendMessageService.sendLongMess(messageContent, phoneNum);
+
 		} else {
-			payType = "YFK";
-		}
-		if (StringUtils.isBlank(hospNo)) {// 订单号不能为空
-			isSuccess = false;
-			logger.error("订单号为空,订单号=>" + hospNo);
-		}
-		HeadBean bean = null;
-		if (isSuccess) {
-			BeanService bshisservice = null;
-			try {
-				bshisservice = appointedService.Notification(hospNo, null, payType, paymoney, hospNo, payTime, payFlag);
-			} catch (Exception e) {
-				logger.error("其它异常=>", e);
-				json.put("code", -1);
-				if (bshisservice.getHead() != null) {
-					json.put("msg", bshisservice.getHead().getResultMessage());
-				}
-			} // 通知his同步数据
-			bean = bshisservice.getHead();
-			if (!"0000".equals(bean.getResultCode())) {// 获取状态码
-				int counter = 1;
-				while (counter < CommonConstant.NOTIFICATION_12580_TIMES) {
-					try {
-						bshisservice = appointedService.Notification(hospNo, null, payType, paymoney, hospNo, payTime,
-								payFlag);
-					} catch (Exception e) {
-						logger.error("其它异常=>", e);
-						json.put("code", -1);
-						if (bshisservice.getHead() != null) {
-							json.put("msg", bshisservice.getHead().getResultMessage());
-						}
-					}
-					bean = bshisservice.getHead();
-					if ("0000".equals(bean.getResultCode()) || "003D".equals(bean.getResultCode())) {
-						break;
-					}
-					counter++;
-				}
-				if (counter >= CommonConstant.NOTIFICATION_12580_TIMES) {
-					isSuccess = false;
-				} else {
-					isSuccess = true;
-				}
-			}
+			logger.error(hospNo + "号订单回调通知失败,失败原因:电话号码为空,电话号码为phoneNum=>" + phoneNum);
+			return messageContent;
 		}
 
-		if (isSuccess) {// 同步成功,才进一步发送短信
-			Map<String, Object> param = new HashMap<>();
-			param.put("HOSPNO", hospNo);
-			Map<String, Object> msgmap = commonService.selectOne("msginfo.findMsgInfo", null, param);// 查询短信发送内容
-			String phoneNum = RequestDataUtil.getValueForKey(msgmap, "PHONENUM");
-			if (StringUtils.isNotBlank(phoneNum)) {
-				String messageContent = MessageUtils.generateCreamMessage(msgmap, creamPaySuccessMsg);
-				try {
-					// 一切发送成功然后发送短息
-					MessageUtils.sendMessage("jdbc.properties", phoneNum, messageContent, msgFmt, "",
-							new Timestamp(System.currentTimeMillis()), ApplicationID, phoneNum + System.nanoTime(),
-							reqDeliveryReport, sendMethod, this.getClass());
-				} catch (Exception e) {
-					json.put("code", -1);
-					json.put("msg", "短信发送异常");
-					logger.error("12580 发送短信异常", e);
-					return json.toJSONString();
+		return messageContent;
+	}
+
+	/**
+	 * 发送12580预约成功短信
+	 * 
+	 * @param hospNo
+	 * @param methodName
+	 * @param beginTime
+	 */
+	private String sendOrderMessage(String hospNo) {
+		String messageContent = "";
+		Map<String, Object> param = RequestDataUtil.getMapByInputParam(Arrays.asList("HOSPNO"), Arrays.asList(hospNo));
+
+		Map<String, Object> msgmap = commonService.selectOne("msginfo.findMsgInfo", null, param);// 查询短信发送内容
+		Map<String, Object> addMap = commonService.selectOne("cancelPay.queryAddressByNo", null, param);// 查询科室地址
+		// 获取诊疗地址信息
+		String address = CharacterEncodeUtil.returnEncode(RequestDataUtil.getValueForKey(addMap, "ADDRESS"));
+		String phoneNum = RequestDataUtil.getValueForKey(msgmap, "PHONENUM");
+		if (StringUtils.isNotBlank(phoneNum)) {
+			// 更加是否初诊和自费以及非自费选择不同的模板发送短信
+			Map<String, Object> patNatureMap = commonService.selectOne("message.queryPatNature", null, param);
+			// 初诊病人
+			if ("2".equals(RequestDataUtil.getValueForKey(patNatureMap, "VISITFLAG"))) {
+				messageContent = MessageUtils.generateMutiMessage(msgmap, firstVisitPaySuccessMsg);
+			} else {
+				// 自费病人
+				if ("1000".equals(RequestDataUtil.getValueForKey(patNatureMap, "CHARGEFLAG"))) {
+					messageContent = MessageUtils.generateMutiMessage(msgmap, nextVisitSelfPaySuccessMsg);
+				} else {
+					// 非自费病人
+					messageContent = MessageUtils.generateMutiMessage(msgmap, nextVisitNoSelfPaySuccessMsg);
 				}
-				Date endTime = new Date();
-				logger.info("调用接口" + methodName + "订单号为=>" + hospNo + "结束:时间为:"
-						+ DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求参数为:" + "电话号码为=>" + phoneNum
-						+ " 发送内容为=>" + messageContent + ",时间标记为[" + beginTime.getTime() + "]");
-			} else {
-				logger.error(hospNo + "号订单回调通知失败,失败原因:电话号码为空,电话号码为phoneNum=>" + phoneNum);
 			}
-		}
-		if (!isSuccess) {// 做一个简单的反参处理
-			if (bean != null) {
-				json.put("code", bean.getResultCode());
-				json.put("msg", bean.getResultMessage());
-				logger.error(hospNo + "号订单回调通知失败,失败原因:返回参数=>" + json.toJSONString());
-			} else {
-				logger.error("程序转换异常或者订单号为空!");
+
+			if (StringUtils.isNotBlank(messageContent) && messageContent.matches(".*江苏省中医院.*")) {
+				messageContent = messageContent.replaceAll("江苏省中医院", address);
 			}
+			if(StringUtils.isNotBlank(messageContent)){
+				sendMessageService.sendLongMess(messageContent, phoneNum);
+			}else{
+				logger.error("发送短信内容为null,拒绝发送");
+				return messageContent;
+			}
+
+		} else {
+			logger.error(hospNo + "号订单回调通知失败,失败原因:电话号码为空,电话号码为phoneNum=>" + phoneNum);
+			return messageContent;
 		}
-		logger.info(hospNo + "号订单回调同步数据成功,反参=>" + json.toJSONString());
-		return json.toJSONString();
+
+		return messageContent;
 	}
 
 }

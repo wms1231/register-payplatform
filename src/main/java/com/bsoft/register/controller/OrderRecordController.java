@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.exception.WebException;
 import com.bsoft.register.service.OrderRecordService;
 import com.bsoft.support.PageResult;
@@ -91,7 +91,7 @@ public class OrderRecordController {
 			page = orderRecordService.orderRecordQueryWithPage(register, xBeginTime, xEndTime,yBeginTime,yEndTime, orderStatus, param,
 					pageNo, pageSize, sqlKey, orders);
 		} catch (Exception e) {
-			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, e.getMessage());
+			throw new WebException(CommonConst.DEFAULT_FAIL_CODE, e.getMessage());
 		}
 
 		PageResult pageResult = PageResultUtil.getSuccessPageResult(page.getRowCount(), page.getPageSize(), pageNo,

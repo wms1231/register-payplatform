@@ -9,24 +9,27 @@
 		               b.brxm      as brmc,
 		               b.sfzh      as sfzh,
 		               ms.djgh     as yyqd,
-		               to_char(decode(jl.tzbz,
-		                              0,
-		                              decode(ms.ghbz,
-		                                     0,
-		                                     case
-		                                       when (sysdate >
-		                                            nvl((select hb.locktime
-		                                                   from yy_kspb_hb hb
-		                                                  where hb.sbxh = ms.yyhbsbxh
-		                                                    and hb.brid = ms.brid),
-		                                                 to_date('2017-01-01 01:01:01',
-		                                                         'yyyy-mm-dd hh24:mi:ss'))) then
-		                                        1
-		                                       else
-		                                        0
-		                                     end,
-		                                     decode(ms.ghbz, 6, 1, ms.ghbz)),
-		                              2)) as yyzt,
+		               to_char(decode(ms.ghbz,
+                              0,
+                              case
+                                when (sysdate >
+                                     nvl((select hb.locktime
+                                            from yy_kspb_hb hb
+                                           where hb.sbxh = ms.yyhbsbxh
+                                             and hb.brid = ms.brid and hb.yylx =${@com.bsoft.constant.OrderSourceConst@YY_KSPB_HB_YYLX}),
+                                          to_date('2017-01-01 01:01:01',
+                                                  'yyyy-mm-dd hh24:mi:ss'))) then
+                                 1
+                                else
+                                 0
+                              end,
+                              decode(ms.ghbz,
+                                     6,
+                                     1,
+                                     decode(ms.ghbz,
+                                            3,
+                                            decode(jl.tzbz, 0, ms.ghbz, 2),
+                                            ms.ghbz)))) as yyzt,
 		               nvl(mc.doctorname, 'normal') as ysmc,
 		               mc.deptname as ksmc,
 		               to_char(ms.ghrq, 'yyyy-mm-dd hh24:mi:ss') as xdrq,
@@ -45,7 +48,7 @@
 		           <if test="register != null and register != ''">
 		           	and mc.register = #{register}
 		           </if>
-		           and ms.yyly = '9'
+		           and ms.yyly = ${@com.bsoft.constant.OrderSourceConst@MS_YYGH_YYLY}
 		           <if test="beginTime != null and beginTime != ''">
 				    	<![CDATA[ and ms.ghrq >=  to_date(#{beginTime}, 'yyyy-mm-dd HH24:mi:ss')]]>
 		           </if>

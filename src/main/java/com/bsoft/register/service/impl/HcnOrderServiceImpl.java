@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bsoft.constant.AppCommonConstant;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.AppCommonConst;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.register.service.HcnOrderService;
 import com.bsoft.support.service.ICommonService;
 import com.bsoft.tools.CharacterEncodeUtil;
@@ -37,7 +37,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 
 	@Autowired
 	private ICommonService commonService;
-
+	
 	public Map<String, Object> callOrderPro(String sqlKey, String dataSource, Map<String, Object> param) {
 		// 加入切换条件
 		String paramV = RequestDataUtil.getValueForKey(
@@ -49,7 +49,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 
 		if (!"1".equals(paramV)) {
 			param.put("proName",
-					RequestDataUtil.getValueForKey(param, "proName").replaceAll(".+\\.", AppCommonConstant.pack2));
+					RequestDataUtil.getValueForKey(param, "proName").replaceAll(".+\\.", AppCommonConst.pack2));
 		}
 
 		commonService.selectOne(sqlKey, dataSource, param);
@@ -114,7 +114,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 		// 解密
 		String jsonStr = "";
 		try {
-			String key = AppCommonConstant.SYSTEM_APP_SECRET_KEY + timestamp;// 秘钥
+			String key = AppCommonConst.SYSTEM_APP_SECRET_KEY + timestamp;// 秘钥
 			jsonStr = DecryptUtil.decryptToString(key, aclContent);// 解密
 		} catch (Exception e) {
 			logger.error("解密数据发生异常,异常信息为:" + e.getMessage());
@@ -125,7 +125,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 				+ jsonStr + ",时间标记为[" + beginTime.getTime() + "]");
 		// 安全性检测
 		try {
-			String checkAcl = HttpRequestProxy.getACL(AppCommonConstant.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
+			String checkAcl = HttpRequestProxy.getACL(AppCommonConst.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
 			// 进行url加密，比如 / 转码为 %2F
 			String encodeAcl = URLEncoder.encode(acl, "utf-8");
 			if (StringUtils.isNotBlank(checkAcl) || StringUtils.isNotBlank(encodeAcl)) {
@@ -184,7 +184,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 		map.put("hospNo", hospNo);
 		map.put("refund_fee", refund_fee);
 		map.put("out_request_no", out_request_no);
-		return HttpUtil.postData(CommonConstant.REFUND_PAY_URL, RequestDataUtil.generatorRequestXml(map));// 发出退款请求
+		return HttpUtil.postData(CommonConst.REFUND_PAY_URL, RequestDataUtil.generatorRequestXml(map));// 发出退款请求
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 		// 操作员姓名
 		map.put("collectFeesName", RequestDataUtil.getValueForKey(returnPayMap, "collectFeesName"));
 		// 发送同步请求
-		return HttpUtil.postData(CommonConstant.OTHER_PAY_URL, RequestDataUtil.generatorRequestXml(map));
+		return HttpUtil.postData(CommonConst.OTHER_PAY_URL, RequestDataUtil.generatorRequestXml(map));
 	}
 
 	/**

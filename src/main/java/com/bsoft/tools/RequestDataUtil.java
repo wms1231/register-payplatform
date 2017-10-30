@@ -134,19 +134,25 @@ public class RequestDataUtil {
 	 * @throws IOException
 	 * @throws DocumentException
 	 */
-	public static JSONObject getRequestData(HttpServletRequest request) throws IOException, DocumentException {
-		BufferedReader reader = request.getReader();
-		char[] buf = new char[512];
-		int len = 0;
-		StringBuffer contentBuffer = new StringBuffer();
-		while ((len = reader.read(buf)) != -1) {
-			contentBuffer.append(buf, 0, len);
+	public static JSONObject getRequestData(HttpServletRequest request){
+		JSONObject obj = null;
+		try {
+			BufferedReader reader = request.getReader();
+			char[] buf = new char[512];
+			int len = 0;
+			StringBuffer contentBuffer = new StringBuffer();
+			while ((len = reader.read(buf)) != -1) {
+				contentBuffer.append(buf, 0, len);
+			}
+			String content = contentBuffer.toString();
+			if (content == null) {
+				content = "";
+			}
+			obj = JSON.parseObject(content);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return obj;
 		}
-		String content = contentBuffer.toString();
-		if (content == null) {
-			content = "";
-		}
-		JSONObject obj = JSON.parseObject(content);
 		return obj;
 	}
 
@@ -215,6 +221,18 @@ public class RequestDataUtil {
 	public static <E> Map<String, Object> getMapByInputParam(List<String> names, List<E> values) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		if (names == null || values == null) {
+			return map;
+		}
+
+		for (int i = 0; i < names.size(); i++) {
+			map.put(names.get(i), values.get(i));
+		}
+		return map;
+	}
+
+	public static Map<String, String> getMapByStringParam(List<String> names, List<String> values) {
+		Map<String, String> map = new HashMap<String, String>();
 		if (names == null || values == null) {
 			return map;
 		}

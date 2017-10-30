@@ -2,7 +2,7 @@ package com.bsoft.factory;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.domain.DeptBean;
 import com.bsoft.domain.DoctorBean;
 import com.bsoft.domain.DoctorInfoquery;
@@ -84,32 +84,32 @@ public class XmlServiceImplBuilder implements XmlServiceBuilder {
 	@Override
 
 	public void buildRequestData(Object dataBean, String serviceCode) {
-		if (CommonConstant.SERVICE_CODE_PATIENTINDEX.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_PATIENTINDEX.equals(serviceCode)) {
 			buildPatientIndexRequestData(dataBean);
-		} else if (CommonConstant.SERVICE_CODE_DEPTINFO.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_DEPTINFO.equals(serviceCode)) {
 			buildDeptInfoRequestData(dataBean);
-		} else if (CommonConstant.SERVICE_CODE_DOCTORINFO.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_DOCTORINFO.equals(serviceCode)) {
 			buildDoctorInfoRequestData(dataBean);
-		} else if (CommonConstant.SERVICE_CODE_ORDERSOURCE.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_ORDERSOURCE.equals(serviceCode)) {
 			buildOrderSourceRequestData(dataBean);
-		} else if (CommonConstant.SERVICE_CODE_REGRECORD.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_REGRECORD.equals(serviceCode)) {
 			buildRegRecordRequestData(dataBean);
-		} else if (CommonConstant.SERVICE_CODE_REGORDER.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_REGORDER.equals(serviceCode)) {
 			buildRegOrderRequestData(dataBean);
-		} else if (CommonConstant.SERVICE_CODE_REGORDER_CANCEL.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_REGORDER_CANCEL.equals(serviceCode)) {
 			buildOrderCancelRequestData(dataBean);
-		}else if (CommonConstant.SERVICE_CODE_GET_REGORDER.equals(serviceCode)) {
+		}else if (CommonConst.SERVICE_CODE_GET_REGORDER.equals(serviceCode)) {
 			buildOrderRecordBeanData(dataBean);
-		}else if (CommonConstant.SERVICE_CODE_CREATE_PATIENT.equals(serviceCode)) {
+		}else if (CommonConst.SERVICE_CODE_CREATE_PATIENT.equals(serviceCode)) {
 			buildPatientBeanData(dataBean);
 		}
-		else if (CommonConstant.SERVICE_CODE_NOTIFICATION.equals(serviceCode)) {
+		else if (CommonConst.SERVICE_CODE_NOTIFICATION.equals(serviceCode)) {
 			buildNotificationBeanData(dataBean);
 		}
-		else if (CommonConstant.SERVICE_CODE_REFUNDNOTIFICATION.equals(serviceCode)) {
+		else if (CommonConst.SERVICE_CODE_REFUNDNOTIFICATION.equals(serviceCode)) {
 			buildRefundNotificationBeanData(dataBean);
 		}
-		else if (CommonConstant.SERVICE_CODE_DOCTOR.equals(serviceCode)) {
+		else if (CommonConst.SERVICE_CODE_DOCTOR.equals(serviceCode)) {
 			buildDoctorInfoRequestData2(dataBean);
 		}
 		

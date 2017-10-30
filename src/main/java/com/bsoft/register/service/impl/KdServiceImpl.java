@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.bsoft.constant.AppCommonConstant;
+import com.bsoft.constant.AppCommonConst;
 import com.bsoft.exception.HandPayException;
 import com.bsoft.register.service.KdService;
 import com.bsoft.support.service.ICommonService;
@@ -99,7 +99,7 @@ public class KdServiceImpl implements KdService {
 		String jsonStr = "";
 		try {
 
-			String key = AppCommonConstant.SYSTEM_APP_SECRET_KEY + timestamp;// 秘钥
+			String key = AppCommonConst.SYSTEM_APP_SECRET_KEY + timestamp;// 秘钥
 			jsonStr = DecryptUtil.decryptToString(key, aclContent);// 解密
 		} catch (Exception e) {
 			logger.error("解密数据发生异常,异常信息为:" + e.getMessage());
@@ -108,7 +108,7 @@ public class KdServiceImpl implements KdService {
 
 		try {
 			// 安全性检测
-			String checkAcl = HttpRequestProxy.getACL(AppCommonConstant.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
+			String checkAcl = HttpRequestProxy.getACL(AppCommonConst.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
 			// 进行url加密，比如 / 转码为 %2F
 			String encodeAcl = URLEncoder.encode(acl, "utf-8");
 

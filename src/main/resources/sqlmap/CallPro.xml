@@ -84,7 +84,7 @@
    
    <!-- 选择使用包名 -->
    <select id="selectPro" resultType="hashmap">
-		select csz paramV from gy_xtcs where csmc='${@com.bsoft.constant.AppCommonConstant@PARAM_VALUE}'         
+		select csz paramV from gy_xtcs where csmc='${@com.bsoft.constant.AppCommonConst@PARAM_VALUE}'         
    </select>
    
 </mapper>

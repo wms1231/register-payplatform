@@ -2,7 +2,7 @@ package com.bsoft.factory;
 
 import java.util.Date;
 
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.domain.DeptBean;
 import com.bsoft.domain.DoctorBean;
 import com.bsoft.domain.DoctorInfoquery;
@@ -31,14 +31,14 @@ public class XmlServiceDirectorClient {
 
 	public void constructPatientIndexBean( String patCardNo) {
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_PATIENTINDEX);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_PATIENTINDEX_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_PATIENTINDEX);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_PATIENTINDEX_DESC);
 		constuctCommonHead(headBean);
 
 		PatientIndexBean patientIndexBean = new PatientIndexBean();
 		patientIndexBean.setPatCardNo(patCardNo);
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(patientIndexBean, CommonConstant.SERVICE_CODE_PATIENTINDEX);
+		buider.buildRequestData(patientIndexBean, CommonConst.SERVICE_CODE_PATIENTINDEX);
 	}
 
 	/**
@@ -48,14 +48,14 @@ public class XmlServiceDirectorClient {
 	 */
 	public void constructDeptInfoBean(String deptCode, String parentdeptCode) {
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_DEPTINFO);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_DEPTINFO_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_DEPTINFO);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_DEPTINFO_DESC);
 		constuctCommonHead(headBean);
 		DeptBean deptBean = new DeptBean();
 		deptBean.setDeptCode(deptCode);
 		deptBean.setParentdeptCode(parentdeptCode);
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(deptBean, CommonConstant.SERVICE_CODE_DEPTINFO);
+		buider.buildRequestData(deptBean, CommonConst.SERVICE_CODE_DEPTINFO);
 	}
 	/**
 	 * 获取大科室
@@ -64,8 +64,8 @@ public class XmlServiceDirectorClient {
 	 */
 	public void constructDeptInfo() {
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_DEPT);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_DEPT_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_DEPT);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_DEPT_DESC);
 
 		constuctCommonHead(headBean);
 
@@ -75,11 +75,11 @@ public class XmlServiceDirectorClient {
 	
 	private void constuctCommonHead(HeadBean headBean) {
 		headBean.setClientRunningNum(new Date().getTime() + "");
-		headBean.setPartnerID(CommonConstant.SERVICE_PARTNER_ID);
-		headBean.setUserID(CommonConstant.SERVICE_USER_ID);
+		headBean.setPartnerID(CommonConst.SERVICE_PARTNER_ID);
+		headBean.setUserID(CommonConst.SERVICE_USER_ID);
 
 		headBean.setTimeStamp(new Date() + "");
-		headBean.setServicePassword(CommonConstant.SERVICE_SERVICE_PASSWORD);
+		headBean.setServicePassword(CommonConst.SERVICE_SERVICE_PASSWORD);
 		headBean.setServerRunningNum(new Date().getTime() + "");
 		
 		headBean.setResultCode("");
@@ -90,8 +90,8 @@ public class XmlServiceDirectorClient {
 	public void constructDoctorInfoBean(String parentdeptCode, String deptCode, String doctorCode) {
 		
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_DOCTORINFO);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_DOCTORINFO_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_DOCTORINFO);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_DOCTORINFO_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -101,14 +101,14 @@ public class XmlServiceDirectorClient {
 		doctorBean.setDoctorCode(doctorCode);
 
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(doctorBean, CommonConstant.SERVICE_CODE_DOCTORINFO);
+		buider.buildRequestData(doctorBean, CommonConst.SERVICE_CODE_DOCTORINFO);
 	}
 
 	
 	public void constructDoctorInfoBean2(String doctorName) {
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_DOCTOR);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_DOCTOR_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_DOCTOR);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_DOCTOR_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -116,13 +116,13 @@ public class XmlServiceDirectorClient {
 		doctorInfoquery.setDoctorName(doctorName);
 
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(doctorInfoquery, CommonConstant.SERVICE_CODE_DOCTOR);
+		buider.buildRequestData(doctorInfoquery, CommonConst.SERVICE_CODE_DOCTOR);
 	}
 	
 	public void constructOrderSourceBean(String beginDate, String endDate, String deptCode, String doctorCode) {
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_ORDERSOURCE);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_ORDERSOURCE_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_ORDERSOURCE);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_ORDERSOURCE_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -133,14 +133,14 @@ public class XmlServiceDirectorClient {
 		orderSourceBean.setDoctorCode(doctorCode);
 
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(orderSourceBean, CommonConstant.SERVICE_CODE_ORDERSOURCE);
+		buider.buildRequestData(orderSourceBean, CommonConst.SERVICE_CODE_ORDERSOURCE);
 	}
 
 	
 	public void constructOrderSourceBeannew(String beginDate, String endDate, String parentDeptCode, String doctorCode) {
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_ORDERSOURCE_NEW);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_ORDERSOURCE_NEW_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_ORDERSOURCE_NEW);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_ORDERSOURCE_NEW_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -151,13 +151,13 @@ public class XmlServiceDirectorClient {
 		orderSourceBean.setDoctorCode(doctorCode);
 
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(orderSourceBean, CommonConstant.SERVICE_CODE_ORDERSOURCE);
+		buider.buildRequestData(orderSourceBean, CommonConst.SERVICE_CODE_ORDERSOURCE);
 	}
 	
 	public void constructRegRecordBean(String patIndex, String hisOrdNum) {
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_REGRECORD);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_REGRECORD_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_REGRECORD);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_REGRECORD_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -166,14 +166,14 @@ public class XmlServiceDirectorClient {
 		orderSourceBean.setHisOrdNum(hisOrdNum);
 
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(orderSourceBean, CommonConstant.SERVICE_CODE_REGRECORD);
+		buider.buildRequestData(orderSourceBean, CommonConst.SERVICE_CODE_REGRECORD);
 	}
 
 	
 	public void constructRegOrderBean(String hisOrdNum, String psOrdNum, String patIndex, String phonenum,String regChannel) {
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_REGORDER);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_REGORDER_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_REGORDER);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_REGORDER_DESC);
 	
 		constuctCommonHead(headBean);
 
@@ -185,15 +185,15 @@ public class XmlServiceDirectorClient {
 		regOrderBean.setRegChannel(regChannel);
 
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(regOrderBean, CommonConstant.SERVICE_CODE_REGORDER);
+		buider.buildRequestData(regOrderBean, CommonConst.SERVICE_CODE_REGORDER);
 	}
 
 	public void constructOrderCancelBean(String hisOrdNum, String psOrdNum, String patIndex, String srialNum,
 			String cancelReason) {
 		
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_REGORDER_CANCEL);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_REGORDER_CANCEL_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_REGORDER_CANCEL);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_REGORDER_CANCEL_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -205,15 +205,15 @@ public class XmlServiceDirectorClient {
 		orderCancel.setCancelReason(cancelReason);
 		
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(orderCancel, CommonConstant.SERVICE_CODE_REGORDER_CANCEL);
+		buider.buildRequestData(orderCancel, CommonConst.SERVICE_CODE_REGORDER_CANCEL);
 	}
 
 	public void constructOrderRecordBean(String scheduleDate, String parentdeptCode, String deptCode, String doctorCode,
 			String patIndex) {
 		
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_GET_REGORDER);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_GET_REGORDERL_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_GET_REGORDER);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_GET_REGORDERL_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -225,7 +225,7 @@ public class XmlServiceDirectorClient {
 		orderRecordBean.setScheduleDate(scheduleDate);
 
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(orderRecordBean, CommonConstant.SERVICE_CODE_GET_REGORDER);
+		buider.buildRequestData(orderRecordBean, CommonConst.SERVICE_CODE_GET_REGORDER);
 	}
 	
 	/**
@@ -240,8 +240,8 @@ public class XmlServiceDirectorClient {
 			String patTel,String patAddress,String patAge) {
 		
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_CREATE_PATIENT);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_CREATE_PATIENT_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_CREATE_PATIENT);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_CREATE_PATIENT_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -257,7 +257,7 @@ public class XmlServiceDirectorClient {
 		
 		
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(patientBean, CommonConstant.SERVICE_CODE_CREATE_PATIENT);
+		buider.buildRequestData(patientBean, CommonConst.SERVICE_CODE_CREATE_PATIENT);
 	}
 	
 
@@ -265,8 +265,8 @@ public class XmlServiceDirectorClient {
 			String agtOrdNum,String payTime,String payFlag) {
 		
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_NOTIFICATION);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_NOTIFICATION_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_NOTIFICATION);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_NOTIFICATION_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -280,14 +280,14 @@ public class XmlServiceDirectorClient {
 		notificationBean.setPayFlag(payFlag);
 				
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(notificationBean, CommonConstant.SERVICE_CODE_NOTIFICATION);
+		buider.buildRequestData(notificationBean, CommonConst.SERVICE_CODE_NOTIFICATION);
 	}
 	
 	public void constructrefundNotificationBean(String hisOrdNum, String payAmt,String payTime) {
 		
 		HeadBean headBean = new HeadBean();
-		headBean.setServiceCode(CommonConstant.SERVICE_CODE_REFUNDNOTIFICATION);
-		headBean.setServiceDesc(CommonConstant.SERVICE_CODE_REFUNDNOTIFICATION_DESC);
+		headBean.setServiceCode(CommonConst.SERVICE_CODE_REFUNDNOTIFICATION);
+		headBean.setServiceDesc(CommonConst.SERVICE_CODE_REFUNDNOTIFICATION_DESC);
 		
 		constuctCommonHead(headBean);
 
@@ -297,6 +297,6 @@ public class XmlServiceDirectorClient {
 		notificationBean.setPayTime(payTime);
 				
 		buider.buildRequestHeader(headBean);
-		buider.buildRequestData(notificationBean, CommonConstant.SERVICE_CODE_REFUNDNOTIFICATION);
+		buider.buildRequestData(notificationBean, CommonConst.SERVICE_CODE_REFUNDNOTIFICATION);
 	}
 }

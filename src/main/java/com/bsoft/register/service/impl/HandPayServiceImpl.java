@@ -15,8 +15,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bsoft.client.mscf.HISWebServiceSoap;
-import com.bsoft.constant.AppCommonConstant;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.AppCommonConst;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.exception.HandPayException;
 import com.bsoft.register.service.HandPayService;
 import com.bsoft.support.service.ICommonService;
@@ -59,7 +59,7 @@ public class HandPayServiceImpl implements HandPayService {
 
 		if (!"1".equals(paramV)) {
 			param.put("proName",
-					RequestDataUtil.getValueForKey(param, "proName").replaceAll(".+\\.", AppCommonConstant.pack2));
+					RequestDataUtil.getValueForKey(param, "proName").replaceAll(".+\\.", AppCommonConst.pack2));
 		}
 
 		commonService.selectOne(sqlKey, dataSource, param);
@@ -172,7 +172,7 @@ public class HandPayServiceImpl implements HandPayService {
 		String jsonStr = "";
 		try {
 
-			String key = AppCommonConstant.SYSTEM_APP_SECRET_KEY + timestamp;// 秘钥
+			String key = AppCommonConst.SYSTEM_APP_SECRET_KEY + timestamp;// 秘钥
 			jsonStr = DecryptUtil.decryptToString(key, aclContent);// 解密
 		} catch (Exception e) {
 			logger.error("解密数据发生异常,异常信息为:" + e.getMessage());
@@ -181,7 +181,7 @@ public class HandPayServiceImpl implements HandPayService {
 
 		try {
 			// 安全性检测
-			String checkAcl = HttpRequestProxy.getACL(AppCommonConstant.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
+			String checkAcl = HttpRequestProxy.getACL(AppCommonConst.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
 			// 进行url加密，比如 / 转码为 %2F
 			String encodeAcl = URLEncoder.encode(acl, "utf-8");
 
@@ -244,12 +244,12 @@ public class HandPayServiceImpl implements HandPayService {
 	@Override
 	public String queryPayList(Map<String, Object> requestMap, String methodName, Date beginTime) {
 		// 取明细前先取GHMX的SBXH
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_BEFORE);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_BEFORE);
 
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("proName", AppCommonConstant.SYSTEM_HAND_PROCEDURE_NAME);
+		param.put("proName", AppCommonConst.SYSTEM_HAND_PROCEDURE_NAME);
 
-		String visitStr = invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		String visitStr = invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 
 		// 获取就诊序号失败
 		if (!visitStr.contains("xml")) {
@@ -267,11 +267,11 @@ public class HandPayServiceImpl implements HandPayService {
 
 		if (mscfMsg.matches("<topic>\\s*</topic>")) {
 			logger.error("获取东华MS_CF信息为空=>" + visitStr);
-			return ResultMessageUtil.getSpecialServiceFail(null, "获取ms_cf信息为空");
+			return ResultMessageUtil.getSpecialServiceFail(null, "暂无待支付记录");
 		}
 
 		// 保存处方\医技信息
-		param.put("proName", AppCommonConstant.SYSTEM_HAND_PROCEDURE_NAME_INSERT_CFXX);
+		param.put("proName", AppCommonConst.SYSTEM_HAND_PROCEDURE_NAME_INSERT_CFXX);
 		String recipeInfo = insertRecipe("callpro.insertRecipe", null, mscfMsg, param);
 		Map<String, Object> recipeInfoMap = FastJsonUtil.toJSONObject(recipeInfo, Map.class);
 
@@ -285,9 +285,9 @@ public class HandPayServiceImpl implements HandPayService {
 			return ResultMessageUtil.getSpecialServiceFail(null, recipeInfo);
 		}
 
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_GETPAYLIST);
-		param.put("proName", AppCommonConstant.SYSTEM_HAND_PROCEDURE_NAME);
-		String payListReturn = invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);// 调用服务接口
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_GETPAYLIST);
+		param.put("proName", AppCommonConst.SYSTEM_HAND_PROCEDURE_NAME);
+		String payListReturn = invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);// 调用服务接口
 
 		Date endTime = new Date();
 		logger.info("结束接口调用" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求信息为:"
@@ -421,7 +421,7 @@ public class HandPayServiceImpl implements HandPayService {
 		map.put("collectFeesName", RequestDataUtil.getValueForKey(requestMap, "payer"));
 
 		// 发送请求
-		String result = HttpUtil.postData(CommonConstant.OTHER_PAY_URL, RequestDataUtil.generatorRequestXml(map));
+		String result = HttpUtil.postData(CommonConst.OTHER_PAY_URL, RequestDataUtil.generatorRequestXml(map));
 		Map<String, Object> resultMap = FastJsonUtil.toJSONObject(result, Map.class);
 
 		logger.info("推送消息到支付反馈消息=>" + result);

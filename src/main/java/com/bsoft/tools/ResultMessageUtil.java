@@ -3,7 +3,7 @@ package com.bsoft.tools;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.support.ResultMessage;
 
 public class ResultMessageUtil {
@@ -27,8 +27,8 @@ public class ResultMessageUtil {
 	}
 
 	public static ResultMessage getDefaultSuccess(String tag, Object obj) {
-		resultMessage.setCode(CommonConstant.APP_REQUEST_SUCCESS_CODE);
-		resultMessage.setMsg(CommonConstant.LOGIN_SUCCESS_RETURN_MESSAGE);
+		resultMessage.setCode(CommonConst.APP_REQUEST_SUCCESS_CODE);
+		resultMessage.setMsg(CommonConst.LOGIN_SUCCESS_RETURN_MESSAGE);
 		body.clear();
 		body.put(tag, obj);
 
@@ -37,8 +37,8 @@ public class ResultMessageUtil {
 	}
 
 	public static ResultMessage getDefaultParamError(String tag, Object obj) {
-		resultMessage.setCode(CommonConstant.APP_REQUEST_PARAM_ERROR_CODE);
-		resultMessage.setMsg(CommonConstant.APP_REQUEST_PARAM_ERROR_CODE_DESC);
+		resultMessage.setCode(CommonConst.APP_REQUEST_PARAM_ERROR_CODE);
+		resultMessage.setMsg(CommonConst.APP_REQUEST_PARAM_ERROR_CODE_DESC);
 		body.clear();
 		body.put(tag, obj);
 		resultMessage.setBody(body);
@@ -48,8 +48,8 @@ public class ResultMessageUtil {
 
 	public static ResultMessage getDefaultOtherError(String tag, Object obj) {
 		// code
-		resultMessage.setCode(CommonConstant.APP_REQUEST_ERROR_CODE);
-		resultMessage.setMsg(CommonConstant.APP_REQUEST_ERROR_CODE_DESC);
+		resultMessage.setCode(CommonConst.APP_REQUEST_ERROR_CODE);
+		resultMessage.setMsg(CommonConst.APP_REQUEST_ERROR_CODE_DESC);
 		body.clear();
 		body.put(tag, obj);
 		resultMessage.setBody(body);
@@ -68,7 +68,7 @@ public class ResultMessageUtil {
 	public static ResultMessage getSpecialOtherError(String tag, Object obj, String message) {
 		// code
 		body.clear();
-		resultMessage.setCode(CommonConstant.APP_REQUEST_ERROR_CODE);
+		resultMessage.setCode(CommonConst.APP_REQUEST_ERROR_CODE);
 		resultMessage.setMsg(message);
 
 		body.put(tag, obj);
@@ -79,8 +79,8 @@ public class ResultMessageUtil {
 
 	public static ResultMessage getDefaultDecryptFail(String tag, Object obj) {
 		body.clear();
-		resultMessage.setCode(CommonConstant.APP_REQUEST_DECRYPT_FAIL_CODE);// 成功200
-		resultMessage.setMsg(CommonConstant.APP_REQUEST_DECRYPT_FAIL_CODE_DESC);
+		resultMessage.setCode(CommonConst.APP_REQUEST_DECRYPT_FAIL_CODE);// 成功200
+		resultMessage.setMsg(CommonConst.APP_REQUEST_DECRYPT_FAIL_CODE_DESC);
 
 		body.put(tag, obj);
 		resultMessage.setBody(body);
@@ -91,8 +91,8 @@ public class ResultMessageUtil {
 	public static Map<String, Object> getSuccessMap(Object content) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_SUCCESS_CODE);
-		returnMap.put("msg", CommonConstant.LOGIN_SUCCESS_RETURN_MESSAGE);
+		returnMap.put("code", CommonConst.APP_REQUEST_SUCCESS_CODE);
+		returnMap.put("msg", CommonConst.LOGIN_SUCCESS_RETURN_MESSAGE);
 		returnMap.put("body", content);
 
 		return returnMap;
@@ -101,8 +101,8 @@ public class ResultMessageUtil {
 	public static Map<String, Object> getParamErrorMap(Object content) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_PARAM_ERROR_CODE);
-		returnMap.put("msg", CommonConstant.APP_REQUEST_PARAM_ERROR_CODE_DESC);
+		returnMap.put("code", CommonConst.APP_REQUEST_PARAM_ERROR_CODE);
+		returnMap.put("msg", CommonConst.APP_REQUEST_PARAM_ERROR_CODE_DESC);
 		returnMap.put("body", content);
 
 		return returnMap;
@@ -111,7 +111,7 @@ public class ResultMessageUtil {
 	public static Map<String, Object> getParamErrorMap(String message,Object content) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_PARAM_ERROR_CODE);
+		returnMap.put("code", CommonConst.APP_REQUEST_PARAM_ERROR_CODE);
 		returnMap.put("msg", message);
 		returnMap.put("body", content);
 
@@ -121,8 +121,8 @@ public class ResultMessageUtil {
 	public static Map<String, Object> getOtherErrorMap(Object content) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_ERROR_CODE);
-		returnMap.put("msg", CommonConstant.APP_REQUEST_ERROR_CODE_DESC);
+		returnMap.put("code", CommonConst.APP_REQUEST_ERROR_CODE);
+		returnMap.put("msg", CommonConst.APP_REQUEST_ERROR_CODE_DESC);
 		returnMap.put("body", content);
 
 		return returnMap;
@@ -131,7 +131,7 @@ public class ResultMessageUtil {
 	public static Map<String, Object> getSpecialOtherErrorMap(Object content, String message) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_ERROR_CODE);
+		returnMap.put("code", CommonConst.APP_REQUEST_ERROR_CODE);
 		returnMap.put("msg", message);
 		returnMap.put("body", content);
 
@@ -141,8 +141,8 @@ public class ResultMessageUtil {
 	public static Map<String, Object> getDecryptFailMap(Object content) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_DECRYPT_FAIL_CODE);
-		returnMap.put("msg", CommonConstant.APP_REQUEST_DECRYPT_FAIL_CODE_DESC);
+		returnMap.put("code", CommonConst.APP_REQUEST_DECRYPT_FAIL_CODE);
+		returnMap.put("msg", CommonConst.APP_REQUEST_DECRYPT_FAIL_CODE_DESC);
 		returnMap.put("body", content);
 
 		return returnMap;
@@ -151,8 +151,8 @@ public class ResultMessageUtil {
 	public static Map<String, Object> getServiceFailMap(Object content) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_SERVICE_ERROR_CODE);
-		returnMap.put("msg", CommonConstant.APP_SERVICE_ERROR_CODE_DESC);
+		returnMap.put("code", CommonConst.APP_SERVICE_ERROR_CODE);
+		returnMap.put("msg", CommonConst.APP_SERVICE_ERROR_CODE_DESC);
 		returnMap.put("body", content);
 
 		return returnMap;
@@ -160,7 +160,7 @@ public class ResultMessageUtil {
 	public static Map<String, Object> getSpecialServiceFailMap(Object content,String msg) {
 		Map<String, Object> returnMap = new HashMap<>();
 		
-		returnMap.put("code", CommonConstant.APP_SERVICE_ERROR_CODE);
+		returnMap.put("code", CommonConst.APP_SERVICE_ERROR_CODE);
 		returnMap.put("msg", msg);
 		returnMap.put("body", content);
 		
@@ -172,7 +172,7 @@ public class ResultMessageUtil {
 	public static String getSpecialServiceFail(Object content,String msg) {
 		Map<String, Object> returnMap = new HashMap<>();
 		
-		returnMap.put("code", CommonConstant.APP_SERVICE_ERROR_CODE);
+		returnMap.put("code", CommonConst.APP_SERVICE_ERROR_CODE);
 		returnMap.put("msg", msg);
 		returnMap.put("body", content);
 		return FastJsonUtil.toJSONString(returnMap);
@@ -182,7 +182,7 @@ public class ResultMessageUtil {
 	public static String getParamError(String message,Object content) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_PARAM_ERROR_CODE);
+		returnMap.put("code", CommonConst.APP_REQUEST_PARAM_ERROR_CODE);
 		returnMap.put("msg", message);
 		returnMap.put("body", content);
 		return FastJsonUtil.toJSONString(returnMap);
@@ -191,7 +191,7 @@ public class ResultMessageUtil {
 	public static String getSpecialOtherError(Object content, String message) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_ERROR_CODE);
+		returnMap.put("code", CommonConst.APP_REQUEST_ERROR_CODE);
 		returnMap.put("msg", message);
 		returnMap.put("body", content);
 		
@@ -201,8 +201,8 @@ public class ResultMessageUtil {
 	public static String getSuccess(Object content) {
 		Map<String, Object> returnMap = new HashMap<>();
 
-		returnMap.put("code", CommonConstant.APP_REQUEST_SUCCESS_CODE);
-		returnMap.put("msg", CommonConstant.LOGIN_SUCCESS_RETURN_MESSAGE);
+		returnMap.put("code", CommonConst.APP_REQUEST_SUCCESS_CODE);
+		returnMap.put("msg", CommonConst.LOGIN_SUCCESS_RETURN_MESSAGE);
 		returnMap.put("body", content);
 
 		return FastJsonUtil.toJSONString(returnMap);

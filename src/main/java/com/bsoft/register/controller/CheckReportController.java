@@ -18,7 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.bsoft.constant.AppCommonConstant;
+import com.bsoft.constant.AppCommonConst;
 import com.bsoft.register.service.ReportService;
 import com.bsoft.tools.DateUtils;
 import com.bsoft.tools.DecryptUtil;
@@ -78,7 +78,7 @@ public class CheckReportController {
 		String jsonStr = null;
 		try {
 			// 秘钥
-			String key = AppCommonConstant.SYSTEM_APP_SECRET_KEY + timestamp;
+			String key = AppCommonConst.SYSTEM_APP_SECRET_KEY + timestamp;
 			// 解密
 			jsonStr = DecryptUtil.decryptToString(key, aclContent);
 		} catch (Exception e) {
@@ -91,7 +91,7 @@ public class CheckReportController {
 
 		// 安全性检测
 		try {
-			String checkAcl = HttpRequestProxy.getACL(AppCommonConstant.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
+			String checkAcl = HttpRequestProxy.getACL(AppCommonConst.SYSTEM_APP_OAUTH_NAME, timestamp, jsonStr);
 			// 进行url加密，比如 / 转码为 %2F
 			String encodeAcl = URLEncoder.encode(acl, "utf-8");
 			if (StringUtils.isNotBlank(checkAcl) || StringUtils.isNotBlank(encodeAcl)) {

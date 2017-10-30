@@ -1,7 +1,7 @@
 package com.bsoft.factory;
 
 import java.util.Map;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.tools.RequestDataUtil;
 
 /**
@@ -24,31 +24,31 @@ public class AppointedHander {
 		if (map == null) {
 			return "";
 		}
-		if (CommonConstant.SERVICE_CODE_PATIENTINDEX.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_PATIENTINDEX.equals(serviceCode)) {
 			String patCardNo = RequestDataUtil.getValueForKey(map, "patCardNo");
 			xmlClient.constructPatientIndexBean(patCardNo);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_DEPTINFO.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_DEPTINFO.equals(serviceCode)) {
 			String deptCode = RequestDataUtil.getValueForKey(map, "deptCode");
 			String parentdeptCode = RequestDataUtil.getValueForKey(map, "parentdeptCode");
 			xmlClient.constructDeptInfoBean(deptCode, parentdeptCode);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_DEPT.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_DEPT.equals(serviceCode)) {
 			xmlClient.constructDeptInfo();
 			return xmlBuilder.getResult().toString();
 
-		} else if (CommonConstant.SERVICE_CODE_DOCTORINFO.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_DOCTORINFO.equals(serviceCode)) {
 			String deptCode = RequestDataUtil.getValueForKey(map, "deptCode");
 			String parentdeptCode = RequestDataUtil.getValueForKey(map, "parentdeptCode");
 			String doctorCode = RequestDataUtil.getValueForKey(map, "doctorCode");
 			xmlClient.constructDoctorInfoBean(parentdeptCode, deptCode, doctorCode);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_DOCTOR.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_DOCTOR.equals(serviceCode)) {
 			String doctorName = RequestDataUtil.getValueForKey(map, "doctorName");
 			xmlClient.constructDoctorInfoBean2(doctorName);
 			return xmlBuilder.getResult().toString();
 			
-		} else if (CommonConstant.SERVICE_CODE_REGORDER.equals(serviceCode)) {// 预约挂号
+		} else if (CommonConst.SERVICE_CODE_REGORDER.equals(serviceCode)) {// 预约挂号
 			String hisOrdNum = RequestDataUtil.getValueForKey(map, "hisOrdNum");
 			String psOrdNum = RequestDataUtil.getValueForKey(map, "psOrdNum");
 			String patIndex = RequestDataUtil.getValueForKey(map, "patIndex");
@@ -56,21 +56,21 @@ public class AppointedHander {
 			String regChannel = RequestDataUtil.getValueForKey(map, "regChannel");
 			xmlClient.constructRegOrderBean(hisOrdNum, psOrdNum, patIndex, phonenum, regChannel);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_ORDERSOURCE.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_ORDERSOURCE.equals(serviceCode)) {
 			String beginDate = RequestDataUtil.getValueForKey(map, "beginDate");
 			String endDate = RequestDataUtil.getValueForKey(map, "endDate");
 			String deptCode = RequestDataUtil.getValueForKey(map, "deptCode");
 			String doctorCode = RequestDataUtil.getValueForKey(map, "doctorCode");
 			xmlClient.constructOrderSourceBean(beginDate, endDate, deptCode, doctorCode);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_ORDERSOURCE_NEW.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_ORDERSOURCE_NEW.equals(serviceCode)) {
 			String beginDate = RequestDataUtil.getValueForKey(map, "beginDate");
 			String endDate = RequestDataUtil.getValueForKey(map, "endDate");
 			String parentDeptCode = RequestDataUtil.getValueForKey(map, "parentDeptCode");
 			String doctorCode = RequestDataUtil.getValueForKey(map, "doctorCode");
 			xmlClient.constructOrderSourceBeannew(beginDate, endDate, parentDeptCode, doctorCode);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_REGORDER_CANCEL.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_REGORDER_CANCEL.equals(serviceCode)) {
 			String hisOrdNum = RequestDataUtil.getValueForKey(map, "hisOrdNum");
 			String psOrdNum = RequestDataUtil.getValueForKey(map, "psOrdNum");
 			String patIndex = RequestDataUtil.getValueForKey(map, "patIndex");
@@ -79,12 +79,12 @@ public class AppointedHander {
 
 			xmlClient.constructOrderCancelBean(hisOrdNum, psOrdNum, patIndex, srialNum, cancelReason);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_REGRECORD.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_REGRECORD.equals(serviceCode)) {
 			String patIndex = RequestDataUtil.getValueForKey(map, "patIndex");
 			String hisOrdNum = RequestDataUtil.getValueForKey(map, "hisOrdNum");
 			xmlClient.constructRegRecordBean(patIndex, hisOrdNum);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_GET_REGORDER.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_GET_REGORDER.equals(serviceCode)) {
 			String scheduleDate = RequestDataUtil.getValueForKey(map, "scheduleDate");
 			String parentdeptCode = RequestDataUtil.getValueForKey(map, "parentdeptCode");
 			String deptCode = RequestDataUtil.getValueForKey(map, "deptCode");
@@ -92,7 +92,7 @@ public class AppointedHander {
 			String patIndex = RequestDataUtil.getValueForKey(map, "patIndex");
 			xmlClient.constructOrderRecordBean(scheduleDate, parentdeptCode, deptCode, doctorCode, patIndex);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_CREATE_PATIENT.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_CREATE_PATIENT.equals(serviceCode)) {
 			String patIDType = RequestDataUtil.getValueForKey(map, "patIDType");
 			String patID = RequestDataUtil.getValueForKey(map, "patID");
 			String patName = RequestDataUtil.getValueForKey(map, "patName");
@@ -102,7 +102,7 @@ public class AppointedHander {
 			String patAge = RequestDataUtil.getValueForKey(map, "patAge");
 			xmlClient.constructPatientBean(patIDType, patID, patName, patGender, patTel, patAddress, patAge);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_NOTIFICATION.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_NOTIFICATION.equals(serviceCode)) {
 			String hisOrdNum = RequestDataUtil.getValueForKey(map, "hisOrdNum");
 			String psOrdNum = RequestDataUtil.getValueForKey(map, "psOrdNum");
 			String payMode = RequestDataUtil.getValueForKey(map, "payMode");
@@ -112,7 +112,7 @@ public class AppointedHander {
 			String payFlag = RequestDataUtil.getValueForKey(map, "payFlag");
 			xmlClient.constructNotificationBean(hisOrdNum, psOrdNum, payMode, payAmt, agtOrdNum, payTime, payFlag);
 			return xmlBuilder.getResult().toString();
-		} else if (CommonConstant.SERVICE_CODE_REFUNDNOTIFICATION.equals(serviceCode)) {
+		} else if (CommonConst.SERVICE_CODE_REFUNDNOTIFICATION.equals(serviceCode)) {
 			String hisOrdNum = RequestDataUtil.getValueForKey(map, "hisOrdNum");
 			String payAmt = RequestDataUtil.getValueForKey(map, "payAmt");
 			String payTime = RequestDataUtil.getValueForKey(map, "payTime");
@@ -134,47 +134,47 @@ public class AppointedHander {
 	public static BeanService buildResultData(String responseStr, String serviceCode) throws Exception {
 		BeanServiceDirectorClient beanClient = new BeanServiceDirectorClient();
 
-		if (CommonConstant.SERVICE_CODE_PATIENTINDEX.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_PATIENTINDEX.equals(serviceCode)) {
 			return beanClient.parsePatientResponseStr(responseStr);
 		}
 
-		if (CommonConstant.SERVICE_CODE_DEPTINFO.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_DEPTINFO.equals(serviceCode)) {
 			return beanClient.parseDeptInfoResponseStr(responseStr);
 		}
 
-		if (CommonConstant.SERVICE_CODE_DEPT.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_DEPT.equals(serviceCode)) {
 			return beanClient.parseDeptResponseStr(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_DOCTORINFO.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_DOCTORINFO.equals(serviceCode)) {
 			return beanClient.parseDoctorInfoResponseStr(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_DOCTOR.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_DOCTOR.equals(serviceCode)) {
 			return beanClient.parseDoctorInfoResponseStr2(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_REGORDER.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_REGORDER.equals(serviceCode)) {
 			return beanClient.parseRegOrderResponseStr(responseStr);
 		}
 
-		if (CommonConstant.SERVICE_CODE_ORDERSOURCE.equals(serviceCode)
-				|| CommonConstant.SERVICE_CODE_ORDERSOURCE_NEW.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_ORDERSOURCE.equals(serviceCode)
+				|| CommonConst.SERVICE_CODE_ORDERSOURCE_NEW.equals(serviceCode)) {
 			return beanClient.parseOrderSourceResponseStr(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_REGORDER_CANCEL.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_REGORDER_CANCEL.equals(serviceCode)) {
 			return beanClient.parseOrderCancelResponseStr(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_REGRECORD.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_REGRECORD.equals(serviceCode)) {
 			return beanClient.parseRegRecordResponseStr(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_GET_REGORDER.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_GET_REGORDER.equals(serviceCode)) {
 			return beanClient.parseOrderRecordResponseStr(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_CREATE_PATIENT.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_CREATE_PATIENT.equals(serviceCode)) {
 			return beanClient.parseCreatePatientResponseStr(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_NOTIFICATION.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_NOTIFICATION.equals(serviceCode)) {
 			return beanClient.parseNotificationRsponseStr(responseStr);
 		}
-		if (CommonConstant.SERVICE_CODE_REFUNDNOTIFICATION.equals(serviceCode)) {
+		if (CommonConst.SERVICE_CODE_REFUNDNOTIFICATION.equals(serviceCode)) {
 			return beanClient.parseRefundNotificationRsponseStr(responseStr);
 		}
 

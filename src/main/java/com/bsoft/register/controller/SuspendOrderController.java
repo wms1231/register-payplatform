@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.exception.WebException;
 import com.bsoft.register.service.SuspendOrderService;
 import com.bsoft.support.PageResult;
@@ -64,7 +64,7 @@ public class SuspendOrderController {
 				for (String order : orders) {
 					order = order.split(":")[0] + ":" + order.split(":")[1].toLowerCase();
 					if (!order.trim().matches(".+:desc|.+:asc")) {
-						throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
+						throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
 					}
 				}
 			}
@@ -72,7 +72,7 @@ public class SuspendOrderController {
 			List<Map<String, Object>> mapList = suspendOrderService.departQuery(sqlKey, dataSource, param, orders);
 			returnMsg = CharacterEncodeUtil.returnEncode(FastJsonUtil.toJSONString(mapList));
 		} catch (Exception e) {
-			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, e.getMessage());
+			throw new WebException(CommonConst.DEFAULT_FAIL_CODE, e.getMessage());
 		}
 		return returnMsg;
 
@@ -91,7 +91,7 @@ public class SuspendOrderController {
 				for (String order : orders) {
 					order = order.split(":")[0] + ":" + order.split(":")[1].toLowerCase();
 					if (!order.trim().matches(".+:desc|.+:asc")) {
-						throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
+						throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
 					}
 				}
 			}
@@ -109,7 +109,7 @@ public class SuspendOrderController {
 			List<Map<String, Object>> mapList = suspendOrderService.doctorsQuery(sqlKey, dataSource, param, orders);
 			returnMsg = CharacterEncodeUtil.returnEncode(FastJsonUtil.toJSONString(mapList));
 		} catch (Exception e) {
-			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, e.getMessage());
+			throw new WebException(CommonConst.DEFAULT_FAIL_CODE, e.getMessage());
 		}
 		return returnMsg;
 
@@ -131,7 +131,7 @@ public class SuspendOrderController {
 				for (String order : orders) {
 					order = order.split(":")[0] + ":" + order.split(":")[1].toLowerCase();
 					if (!order.trim().matches(".+:desc|.+:asc")) {
-						throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
+						throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
 					}
 				}
 			}
@@ -155,7 +155,7 @@ public class SuspendOrderController {
 			List<Map<String, Object>> mapList = suspendOrderService.deptMutiQuery(sqlKey, dataSource, param, orders);
 			returnMsg = CharacterEncodeUtil.returnEncode(FastJsonUtil.toJSONString(mapList));
 		} catch (Exception e) {
-			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, e.getMessage());
+			throw new WebException(CommonConst.DEFAULT_FAIL_CODE, e.getMessage());
 		}
 		return returnMsg;
 
@@ -180,24 +180,24 @@ public class SuspendOrderController {
 		String returnMsg = NULL_VALUE;
 		try {
 			if (!timeFlag.matches("[12]{1}")) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "timeFlag字段必须为1或2");
+				throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "timeFlag字段必须为1或2");
 			}
 
 			if (orders != null && orders.length > 0) {
 				for (String order : orders) {
 					order = order.split(":")[0] + ":" + order.split(":")[1].toLowerCase();
 					if (!order.trim().matches(".+:desc|.+:asc")) {
-						throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
+						throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
 					}
 				}
 			}
 
 			if (!beginTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "beginTime日期字符串不满足默认的yyyy-MM-dd格式");
+				throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "beginTime日期字符串不满足默认的yyyy-MM-dd格式");
 			}
 
 			if (!endTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "date日期字符串不满足默认的yyyy-MM-dd格式");
+				throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "date日期字符串不满足默认的yyyy-MM-dd格式");
 			}
 
 			if (StringUtils.isBlank(sqlKey)) {
@@ -238,7 +238,7 @@ public class SuspendOrderController {
 					page.getResult(), "success");
 			returnMsg = CharacterEncodeUtil.returnEncode(FastJsonUtil.toJSONString(pageResult));
 		} catch (Exception e) {
-			throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, e.getMessage());
+			throw new WebException(CommonConst.DEFAULT_FAIL_CODE, e.getMessage());
 		}
 		return returnMsg;
 	}

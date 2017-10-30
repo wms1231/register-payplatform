@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.support.PageResult;
 
 public class PageResultUtil {
@@ -18,7 +18,7 @@ public class PageResultUtil {
 		pageResult.setPageNo(pageNo);
 		int totalNum = rowCount.intValue();
 		pageResult.setPageNum(totalNum % pageSize == 0 ? (totalNum /pageSize) : (totalNum / pageSize + 1));
-		pageResult.setCode(CommonConstant.DEFAULT_SUCCESS_CODE);
+		pageResult.setCode(CommonConst.DEFAULT_SUCCESS_CODE);
 		pageResult.setMessage(message);
 		return pageResult;
 	}
@@ -31,7 +31,7 @@ public class PageResultUtil {
 		pageResult.setPageNum(0);
 		pageResult.setList(new ArrayList<Map<String, Object>>());
 		pageResult.setPageNo(pageNo);
-		pageResult.setCode(CommonConstant.DEFAULT_FAIL_CODE);
+		pageResult.setCode(CommonConst.DEFAULT_FAIL_CODE);
 		pageResult.setMessage(message);
 		return pageResult;
 	}

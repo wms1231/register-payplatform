@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.factory.AppointedHander;
 import com.bsoft.factory.BeanService;
 import com.bsoft.register.service.AppointedService;
@@ -55,8 +55,8 @@ public class AppointedServiceImpl implements AppointedService {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("patIDType", "patID", "patName", "patGender", "patTel", "patAddress", "patAge"),
 				Arrays.asList(patIDType, patID, patName, patGender, patTel, patAddress, patAge));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_CREATE_PATIENT);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_CREATE_PATIENT);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_CREATE_PATIENT);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_CREATE_PATIENT);
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class AppointedServiceImpl implements AppointedService {
 	public BeanService queryPatientIndex(String patCardNo) throws Exception {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("patCardNo"),
 				Arrays.asList(patCardNo));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_PATIENTINDEX);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_PATIENTINDEX);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_PATIENTINDEX);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_PATIENTINDEX);
 	}
 
 	/**
@@ -84,8 +84,8 @@ public class AppointedServiceImpl implements AppointedService {
 	public BeanService queryDeptInfo(String deptCode, String parentdeptCode) throws Exception {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("deptCode", "parentdeptCode"),
 				Arrays.asList(deptCode, parentdeptCode));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_DEPTINFO);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_DEPTINFO);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_DEPTINFO);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_DEPTINFO);
 	}
 
 	/**
@@ -96,8 +96,8 @@ public class AppointedServiceImpl implements AppointedService {
 	 */
 	public BeanService queryDept() throws Exception {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(null, null);
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_DEPT);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_DEPT);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_DEPT);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_DEPT);
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class AppointedServiceImpl implements AppointedService {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("parentdeptCode", "deptCode", "doctorCode"),
 				Arrays.asList(parentdeptCode, deptCode, doctorCode));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_DOCTORINFO);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_DOCTORINFO);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_DOCTORINFO);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_DOCTORINFO);
 	}
 
 	/**
@@ -124,8 +124,8 @@ public class AppointedServiceImpl implements AppointedService {
 	public BeanService fuzzyQueryDoctor(String doctorName) throws Exception {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("doctorName"),
 				Arrays.asList(doctorName));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_DOCTOR);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_DOCTOR);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_DOCTOR);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_DOCTOR);
 	}
 
 	/**
@@ -142,8 +142,8 @@ public class AppointedServiceImpl implements AppointedService {
 				Arrays.asList("hisOrdNum", "psOrdNum", "patIndex", "phonenum", "regChannel"),
 				Arrays.asList(hisOrdNum, psOrdNum, patIndex, phonenum, regChannel));
 
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_REGORDER);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_REGORDER);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_REGORDER);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_REGORDER);
 	}
 
 	/**
@@ -160,11 +160,11 @@ public class AppointedServiceImpl implements AppointedService {
 				Arrays.asList(beginDate, endDate, deptCode, parentDeptCode, doctorCode));
 		String requestStr = AppointedServiceImpl.EMPTY_VALUE;
 		if (StringUtils.isNotBlank(deptCode)) {
-			requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_ORDERSOURCE);
+			requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_ORDERSOURCE);
 		} else {
-			requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_ORDERSOURCE_NEW);
+			requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_ORDERSOURCE_NEW);
 		}
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_ORDERSOURCE_NEW);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_ORDERSOURCE_NEW);
 
 	}
 
@@ -181,8 +181,8 @@ public class AppointedServiceImpl implements AppointedService {
 				Arrays.asList("hisOrdNum", "psOrdNum", "patIndex", "srialNum", "cancelReason"),
 				Arrays.asList(hisOrdNum, psOrdNum, patIndex, srialNum, cancelReason));
 
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_REGORDER_CANCEL);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_REGORDER_CANCEL);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_REGORDER_CANCEL);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_REGORDER_CANCEL);
 	}
 
 	/**
@@ -194,8 +194,8 @@ public class AppointedServiceImpl implements AppointedService {
 	public BeanService appointmentRegRecordQuery(String patIndex, String hisOrdNum) throws Exception {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("patIndex", "hisOrdNum"),
 				Arrays.asList(patIndex, hisOrdNum));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_REGRECORD);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_REGRECORD);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_REGRECORD);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_REGRECORD);
 	}
 
 	/**
@@ -214,8 +214,8 @@ public class AppointedServiceImpl implements AppointedService {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("scheduleDate", "parentdeptCode", "deptCode", "doctorCode", "patIndex"),
 				Arrays.asList(scheduleDate, parentdeptCode, deptCode, doctorCode, patIndex));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_GET_REGORDER);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_GET_REGORDER);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_GET_REGORDER);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_GET_REGORDER);
 
 	}
 
@@ -237,8 +237,8 @@ public class AppointedServiceImpl implements AppointedService {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("hisOrdNum", "psOrdNum", "payMode", "payAmt", "agtOrdNum", "payTime", "payFlag"),
 				Arrays.asList(hisOrdNum, psOrdNum, payMode, payAmt, agtOrdNum, payTime, payFlag));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_NOTIFICATION);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_NOTIFICATION);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_NOTIFICATION);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_NOTIFICATION);
 	}
 
 	/**
@@ -253,8 +253,8 @@ public class AppointedServiceImpl implements AppointedService {
 	public BeanService RefundNotification(String hisOrdNum, String payAmt, String payTime) throws Exception {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("hisOrdNum", "payAmt", "payTime"),
 				Arrays.asList(hisOrdNum, payAmt, payTime));
-		String requestStr = AppointedHander.buildRequestData(map, CommonConstant.SERVICE_CODE_REFUNDNOTIFICATION);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConstant.SERVICE_CODE_REFUNDNOTIFICATION);
+		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_REFUNDNOTIFICATION);
+		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_REFUNDNOTIFICATION);
 	}
 
 	/**
@@ -347,7 +347,7 @@ public class AppointedServiceImpl implements AppointedService {
 		param.put("input", CharacterEncodeUtil.requestEncode(requestStr));
 		param.put("msg", "");
 		param.put("output", new Object());
-		param.put("proName", CommonConstant.SYSTEM_PROCEDURE_PARAMETER);
+		param.put("proName", CommonConst.SYSTEM_PROCEDURE_PARAMETER);
 
 		commonService.selectOne("callpro.order", null, param);
 		param.put("msg", CharacterEncodeUtil.returnEncode((String) param.get("msg")));

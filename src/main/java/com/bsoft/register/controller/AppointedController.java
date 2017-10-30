@@ -28,8 +28,7 @@ public class AppointedController {
 	private static Logger logger = Logger.getLogger(AppointedController.class);
 	@Autowired
 	private AppointedService appointedService;
-	
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getdepinfo", produces = "text/html;charset=UTF-8")
 	@ResponseBody
@@ -64,17 +63,13 @@ public class AppointedController {
 		return json.toJSONString();
 
 	}
-	
-	
+
 	/**
 	 * 获取医生信息
 	 * 
 	 * @param parentdeptCode
-	 *            父科室编码
 	 * @param deptCode
-	 *            科室编码
 	 * @param doctorCode
-	 *            医生编码
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -103,7 +98,7 @@ public class AppointedController {
 		if (!bean.getResultCode().equals("0000")) {
 			json.put("code", -1);
 			json.put("msg", bean.getResultMessage());
-		}else {
+		} else {
 			list = (List<DoctorReturnBean>) bshisservice.getData();
 			json.put("data", list);
 		}
@@ -114,13 +109,9 @@ public class AppointedController {
 	 * 获取号源信息
 	 * 
 	 * @param beginDate
-	 *            开始时间
 	 * @param endDate
-	 *            结束时间
 	 * @param deptCode
-	 *            科室信息
 	 * @param doctorCode
-	 *            医生信息
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -133,8 +124,8 @@ public class AppointedController {
 
 		BeanService bshisservice = null;
 		try {
-			bshisservice = appointedService.appointmentRegOrderSourceQuery(beginDate, endDate,
-					deptCode,null, doctorCode);
+			bshisservice = appointedService.appointmentRegOrderSourceQuery(beginDate, endDate, deptCode, null,
+					doctorCode);
 		} catch (Exception e) {
 			logger.error("其它异常=>", e);
 			jsonResult.setCode("200");
@@ -147,13 +138,12 @@ public class AppointedController {
 		Map<String, Object> data = new HashMap<>();
 		data.put("data", list);
 		data.put("rows", list.size());
-		
+
 		jsonResult.setCode("200");
 		jsonResult.setMsg("success");
 		jsonResult.setContent(data);
 
 		return FastJsonUtil.toJSONString(jsonResult);
 	}
-
 
 }

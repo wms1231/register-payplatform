@@ -15,8 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.bsoft.constant.AppCommonConstant;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.AppCommonConst;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.register.service.HcnOrderService;
 import com.bsoft.tools.DateUtils;
 import com.bsoft.tools.FastJsonUtil;
@@ -100,12 +100,12 @@ public class HcnOrderController {
 		// 移除自定义字段，防止意外异常
 		requestMap.remove("code2");
 		// 添加业务编码
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_SET_BRDA);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_SET_BRDA);
 		// 设置服务参数
 		Map<String, Object> param = new HashMap<>();
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
 		// 调用服务接口
-		String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		// 记录接口调用结束时间
 		Date endTime = new Date();
 		logger.info("调用接口:" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
@@ -129,10 +129,10 @@ public class HcnOrderController {
 		// 移除自定义字段，防止意外异常
 		requestMap.remove("code2");
 		// 添加编码
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_CHK_YSPB);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_CHK_YSPB);
 		Map<String, Object> param = new HashMap<>();
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
-		String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
+		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		// 记录接口调用结束时间
 		Date endTime = new Date();
 
@@ -159,11 +159,11 @@ public class HcnOrderController {
 		// 移除自定义字段，防止意外异常
 		requestMap.remove("code2");
 		// 添加业务编码
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_YYHB);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YYHB);
 
 		Map<String, Object> param = new HashMap<>();
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
-		String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
+		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		// 记录接口调用结束时间
 		Date endTime = new Date();
 		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
@@ -187,12 +187,12 @@ public class HcnOrderController {
 		// 移除自定义字段，防止意外异常
 		requestMap.remove("code2");
 		// 添加页面编码
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_YYGH);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YYGH);
 		// 添加存储过程名
 		Map<String, Object> param = new HashMap<>();
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
 		// 调用存储过程返回名
-		String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		// 记录接口调用结束时间
 		Date endTime = new Date();
 		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
@@ -221,11 +221,11 @@ public class HcnOrderController {
 			return FastJsonUtil.toJSONString(requestMap);
 		}
 		requestMap.remove("code2");// 移除自定义字段，防止意外异常
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_YYGH_PAY);// 同步数据
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YYGH_PAY);// 同步数据
 		Map<String, Object> param = new HashMap<>();
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
 		// 返回jsonStr结果
-		String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		@SuppressWarnings("unchecked")
 		Map<String, Object> returnPayMap = FastJsonUtil.toJSONObject(result, Map.class);// 返回结果转化为json
 
@@ -254,23 +254,23 @@ public class HcnOrderController {
 				paySource = RequestDataUtil.getValueForKey(returnPayMap, "source");
 			}
 
-			if (CommonConstant.HCN_SOURCE_iOS.equals(paySource)
-					|| CommonConstant.HCN_SOURCE_ANDROID.equals(paySource)) {// app支付
-				String paySync = hcnOrderService.paySync(returnPayMap, CommonConstant.APP_ORGANIZATION_CODE,
-						CommonConstant.APP_COMPUTER_NAME, CommonConstant.APP_IP);
+			if (CommonConst.HCN_SOURCE_iOS.equals(paySource)
+					|| CommonConst.HCN_SOURCE_ANDROID.equals(paySource)) {// app支付
+				String paySync = hcnOrderService.paySync(returnPayMap, CommonConst.APP_ORGANIZATION_CODE,
+						CommonConst.APP_COMPUTER_NAME, CommonConst.APP_IP);
 				logger.info("app推送结果=>" + paySync);
 
-			} else if (CommonConstant.HCN_SOURCE_WX.equals(paySource)) {// 微信公众号
-				String paySync = hcnOrderService.paySync(returnPayMap, CommonConstant.WXPUB_ORGANIZATION_CODE,
-						CommonConstant.WXPUB_COMPUTER_NAME, CommonConstant.WXPUB_IP);
+			} else if (CommonConst.HCN_SOURCE_WX.equals(paySource)) {// 微信公众号
+				String paySync = hcnOrderService.paySync(returnPayMap, CommonConst.WXPUB_ORGANIZATION_CODE,
+						CommonConst.WXPUB_COMPUTER_NAME, CommonConst.WXPUB_IP);
 				logger.info("微信公众号推送结果=>" + paySync);
-			} else if (CommonConstant.HCN_SOURCE_WEB.equals(paySource)) {// 微信官网
-				String paySync = hcnOrderService.paySync(returnPayMap, CommonConstant.APP_ORGANIZATION_CODE,
-						CommonConstant.WEB_COMPUTER_NAME, CommonConstant.WEB_IP);
+			} else if (CommonConst.HCN_SOURCE_WEB.equals(paySource)) {// 微信官网
+				String paySync = hcnOrderService.paySync(returnPayMap, CommonConst.APP_ORGANIZATION_CODE,
+						CommonConst.WEB_COMPUTER_NAME, CommonConst.WEB_IP);
 				logger.info("微信官网推送结果=>" + paySync);
 			} else {// 默认处理
-				String paySync = hcnOrderService.paySync(returnPayMap, CommonConstant.APP_ORGANIZATION_CODE,
-						CommonConstant.APP_COMPUTER_NAME, CommonConstant.APP_IP);
+				String paySync = hcnOrderService.paySync(returnPayMap, CommonConst.APP_ORGANIZATION_CODE,
+						CommonConst.APP_COMPUTER_NAME, CommonConst.APP_IP);
 				logger.info("其他推送结果=>" + paySync);
 			}
 		} catch (Exception e) {
@@ -347,9 +347,9 @@ public class HcnOrderController {
 		Map<String, Object> resultMap = null;
 		if (hisNumMap == null || hisNumMap.size() < 3) {
 			// 第一次取消取消预约
-			requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_YYGH_CANCEL);
-			param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
-			String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+			requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YYGH_CANCEL);
+			param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
+			String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 			resultMap = FastJsonUtil.toJSONObject(result, Map.class);
 			if (resultMap == null) {
 				resultMap = new HashMap<>();
@@ -386,19 +386,19 @@ public class HcnOrderController {
 		String paySource = RequestDataUtil.getValueForKey(requestMap, "source");
 
 		String payResult = null;
-		if (CommonConstant.HCN_SOURCE_iOS.equals(paySource) || CommonConstant.HCN_SOURCE_ANDROID.equals(paySource)) {// app支付
-			payResult = hcnOrderService.refund(request, response, CommonConstant.APP_ORGANIZATION_CODE,
-					CommonConstant.APP_COMPUTER_NAME, CommonConstant.APP_IP);
-		} else if (CommonConstant.HCN_SOURCE_WX.equals(paySource)) {// 微信公众号
-			payResult = hcnOrderService.refund(request, response, CommonConstant.WXPUB_ORGANIZATION_CODE,
-					CommonConstant.WXPUB_COMPUTER_NAME, CommonConstant.WXPUB_IP);
+		if (CommonConst.HCN_SOURCE_iOS.equals(paySource) || CommonConst.HCN_SOURCE_ANDROID.equals(paySource)) {// app支付
+			payResult = hcnOrderService.refund(request, response, CommonConst.APP_ORGANIZATION_CODE,
+					CommonConst.APP_COMPUTER_NAME, CommonConst.APP_IP);
+		} else if (CommonConst.HCN_SOURCE_WX.equals(paySource)) {// 微信公众号
+			payResult = hcnOrderService.refund(request, response, CommonConst.WXPUB_ORGANIZATION_CODE,
+					CommonConst.WXPUB_COMPUTER_NAME, CommonConst.WXPUB_IP);
 
-		} else if (CommonConstant.HCN_SOURCE_WEB.equals(paySource)) {// 微信官网
-			payResult = hcnOrderService.refund(request, response, CommonConstant.WEB_ORGANIZATION_CODE,
-					CommonConstant.WEB_COMPUTER_NAME, CommonConstant.WEB_IP);
+		} else if (CommonConst.HCN_SOURCE_WEB.equals(paySource)) {// 微信官网
+			payResult = hcnOrderService.refund(request, response, CommonConst.WEB_ORGANIZATION_CODE,
+					CommonConst.WEB_COMPUTER_NAME, CommonConst.WEB_IP);
 		} else {
-			payResult = hcnOrderService.refund(request, response, CommonConstant.APP_ORGANIZATION_CODE,
-					CommonConstant.APP_COMPUTER_NAME, CommonConstant.APP_IP);
+			payResult = hcnOrderService.refund(request, response, CommonConst.APP_ORGANIZATION_CODE,
+					CommonConst.APP_COMPUTER_NAME, CommonConst.APP_IP);
 		}
 
 		Map<String, Object> payResultMap = FastJsonUtil.toJSONObject(payResult, Map.class);
@@ -411,11 +411,11 @@ public class HcnOrderController {
 		// 退款成功，开始调用退款存储过程,同步数据
 		Map<String, Object> refundRquestMap = new HashMap<>();
 		refundRquestMap.put("thhospno", thhospno);
-		refundRquestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_YYGH_REFUND);
+		refundRquestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YYGH_REFUND);
 		// 覆盖之前的存储过程名
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
 		// 退款成功后业务数据同步
-		String refundResult = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, refundRquestMap,
+		String refundResult = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, refundRquestMap,
 				param);
 		Map<String, Object> refundResultMap = FastJsonUtil.toJSONObject(refundResult, Map.class);
 
@@ -486,10 +486,10 @@ public class HcnOrderController {
 			return FastJsonUtil.toJSONString(requestMap);
 		}
 		requestMap.remove("code2");
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_YYGH_AMOUNT);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YYGH_AMOUNT);
 		Map<String, Object> param = new HashMap<>();
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
-		String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
+		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		Date endTime = new Date();
 		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
@@ -508,10 +508,10 @@ public class HcnOrderController {
 			return FastJsonUtil.toJSONString(requestMap);
 		}
 		requestMap.remove("code2");
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_YYGH_AMOUNT_DETAIL);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YYGH_AMOUNT_DETAIL);
 		Map<String, Object> param = new HashMap<>();
-		param.put("proName", AppCommonConstant.SYSTEM_PROCEDURE_NAME);
-		String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
+		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		Date endTime = new Date();
 		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
@@ -534,12 +534,12 @@ public class HcnOrderController {
 		}
 		requestMap.remove("code2");
 		
-		requestMap.put("proNum", AppCommonConstant.SYSTEM_APP_USP_YSDM_RQ);
+		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YSDM_RQ);
 		
 		Map<String, Object> param = RequestDataUtil.getMapByInputParam(Arrays.asList("proName"),
-				Arrays.asList(AppCommonConstant.SYSTEM_PROCEDURE_NAME));
+				Arrays.asList(AppCommonConst.SYSTEM_PROCEDURE_NAME));
 		
-		String result = hcnOrderService.invokeProc(CommonConstant.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
+		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		Date endTime = new Date();
 		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");

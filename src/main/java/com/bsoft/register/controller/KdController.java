@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.bsoft.constant.AppCommonConstant;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.AppCommonConst;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.register.service.KdService;
 import com.bsoft.tools.FastJsonUtil;
 import com.bsoft.tools.RequestDataUtil;
@@ -43,9 +43,8 @@ public class KdController {
 		}
 		requestMap.remove("code2");
 
-		return kdService.invokeCommonService(methodName, AppCommonConstant.SYSTEM_APP_USP_KD,
-				AppCommonConstant.SYSTEM_HAND_PROCEDURE_NAME, CommonConstant.SYSTEM_PROCEDURE_SQLKEY, requestMap,
-				beginTime);
+		return kdService.invokeCommonService(methodName, AppCommonConst.SYSTEM_APP_USP_KD,
+				AppCommonConst.SYSTEM_HAND_PROCEDURE_NAME, CommonConst.SYSTEM_PROCEDURE_SQLKEY, requestMap, beginTime);
 	}
 
 	@ExceptionHandler(value = { Exception.class })

@@ -58,8 +58,8 @@ public interface PayService {
 	 * @param response
 	 * @return
 	 */
-	public String callback(HttpServletRequest request, HttpServletResponse response);
+	public void callback(HttpServletRequest request, HttpServletResponse response,int flag);
 	
-	public String callCreamBack(HttpServletRequest request, HttpServletResponse response);
+	public void callCreamBack(HttpServletRequest request, HttpServletResponse response);
 
 }

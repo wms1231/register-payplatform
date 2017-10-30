@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -16,7 +18,6 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * 导出Excel 公用类
@@ -44,46 +45,97 @@ public class ExpExcelUtil {
 	 * @return
 	 */
 	public static HSSFWorkbook createExcel() {
+		
 		return new HSSFWorkbook();
 	}
 
+	
 	/**
-	 * 创建一个excel HSSFWorkbook文件
+	 * 创建一个精简的HSSFWorkbook对象
 	 * 
-	 * @param headStr
-	 *            表格头
-	 * @param sheetStr
-	 *            标题
+	 * @param headTitle
+	 * @param sheetName
 	 * @param titleList
-	 *            标题集合
 	 * @param rowList
-	 *            内容集合
-	 * 
 	 * @return
 	 */
-	public static HSSFWorkbook getWorkbook(String headTitle, String sheetName, List<String> titleList,
+	public static HSSFWorkbook getSimpleWorkbook(String headTitle, String sheetName, List<String> titleList,
 			List<List<String>> rowList) {
 		if (WORK_BOOK != null) {
 			WORK_BOOK = null;
 		}
 		WORK_BOOK = createExcel();
-		HSSFCellStyle headStyle = setHeadStyle(WORK_BOOK);
-		HSSFCellStyle titleStyle = setTitleStyle(WORK_BOOK);
-		HSSFCellStyle contentStyle = setContentStyle(WORK_BOOK);
+		
+		HSSFCellStyle headStyle = createHeadStyle(WORK_BOOK);
+		sheetName = "".equals(sheetName) ? DEFAULT_SHEET_NAME : sheetName;
+		HSSFSheet hssfSheet = WORK_BOOK.createSheet(sheetName);
+		int row = 0;
+
+		if (StringUtils.isNotBlank(headTitle)) {
+			int length = titleList.size();
+			length = length > 0 ? length - 1 : length;
+			HSSFRow headRow = hssfSheet.createRow(row);
+			row++;
+			HSSFCell headerCell = headRow.createCell(0);
+			headerCell.setCellValue(headTitle);
+			headerCell.setCellStyle(headStyle);
+			hssfSheet.autoSizeColumn(0);
+			headRow.setHeight(HEAD_ROW_HEIGHT);
+			hssfSheet.addMergedRegion(new CellRangeAddress(0, 0, 0, length));
+		}
+
+		HSSFRow titleRow = hssfSheet.createRow(row);
+		row++;
+		for (int i = 0; i < titleList.size(); i++) {
+			HSSFCell cell = titleRow.createCell(i);
+			cell.setCellValue(titleList.get(i));
+		}
+		for (int i = 0; i < rowList.size(); i++) {
+			HSSFRow hssfRow = hssfSheet.createRow(row + i);
+			hssfRow.setHeight(CONTENT_ROW_HEIGHT);
+			List<String> cellList = rowList.get(i);
+			for (int j = 0; j < cellList.size(); j++) {
+				HSSFCell cell = hssfRow.createCell(j);
+				cell.setCellValue(cellList.get(j));
+			}
+			// 测试使用
+			System.out.println("已经生成列数：" + i);
+		}
+		return WORK_BOOK;
+	}
+
+	/**
+	 * 创建一个格式好看的的 excel HSSFWorkbook文件 速度比较慢
+	 * 
+	 * @param headTitle
+	 * @param sheetName
+	 * @param titleList
+	 * @param rowList
+	 * @return
+	 */
+	public static HSSFWorkbook getSmartWorkbook(String headTitle, String sheetName, List<String> titleList,
+			List<List<String>> rowList) {
+		if (WORK_BOOK != null) {
+			WORK_BOOK = null;
+		}
+		WORK_BOOK = createExcel();
+		HSSFCellStyle headStyle = createHeadStyle(WORK_BOOK);
+		HSSFCellStyle titleStyle = createTitleStyle(WORK_BOOK);
+		HSSFCellStyle contentStyle = createContentStyle(WORK_BOOK);
 		sheetName = "".equals(sheetName) ? DEFAULT_SHEET_NAME : sheetName;
 		HSSFSheet hssfSheet = WORK_BOOK.createSheet(sheetName);
 		int row = 0;// 创建的表格行号
-		
+
 		/** 创建表头合并单元格开始 */
-		if (StringUtils.hasText(headTitle)) {// 判断是否需要标题
+		if (StringUtils.isNotBlank(headTitle)) {// 判断是否需要标题
 			int length = titleList.size();
 			length = length > 0 ? length - 1 : length;
 			HSSFRow headRow = hssfSheet.createRow(row);// 表格头
 			row++;
 			HSSFCell headerCell = headRow.createCell(0);
 			headerCell.setCellValue(headTitle);
-			//headerCell.setCellStyle(headStyle);
-			//hssfSheet.autoSizeColumn(0);
+			headerCell.setCellStyle(headStyle);
+			hssfSheet.autoSizeColumn(0);
 			// 参数1：行号 参数2：起始列号 参数3：行号 参数4：终止列号
 			CellRangeAddress cellRangeAddress = new CellRangeAddress(0, 0, 0, length);
 			headRow.setHeight(HEAD_ROW_HEIGHT);
@@ -98,10 +150,11 @@ public class ExpExcelUtil {
 		for (int i = 0; i < titleList.size(); i++) {
 			HSSFCell cell = titleRow.createCell(i);
 			cell.setCellValue(titleList.get(i));
-			//cell.setCellStyle(titleStyle);
-			//hssfSheet.autoSizeColumn(i);
+			cell.setCellStyle(titleStyle);
+			hssfSheet.autoSizeColumn(i);//特别耗时
 		}
 		// 循环生成具体内容行的具体列
+
 		for (int i = 0; i < rowList.size(); i++) {
 			HSSFRow hssfRow = hssfSheet.createRow(row + i);// 表格内容
 			hssfRow.setHeight(CONTENT_ROW_HEIGHT);
@@ -110,11 +163,9 @@ public class ExpExcelUtil {
 			for (int j = 0; j < cellList.size(); j++) {
 				HSSFCell cell = hssfRow.createCell(j);
 				cell.setCellValue(cellList.get(j));
-				//cell.setCellStyle(contentStyle);
-				//hssfSheet.autoSizeColumn(i);
+				cell.setCellStyle(contentStyle);
+				hssfSheet.autoSizeColumn(i);
 			}
-			// 测试使用
-			System.out.println("已经生成列数：" + i);
 		}
 		return WORK_BOOK;
 	}
@@ -125,7 +176,7 @@ public class ExpExcelUtil {
 	 * @param workBook
 	 * @return
 	 */
-	private static HSSFCellStyle setHeadStyle(HSSFWorkbook workBook) {
+	private static HSSFCellStyle createHeadStyle(HSSFWorkbook workBook) {
 		HSSFCellStyle headStyle = workBook.createCellStyle();
 		headStyle.setAlignment(HorizontalAlignment.CENTER);
 		// 垂直居中
@@ -145,9 +196,9 @@ public class ExpExcelUtil {
 	 * @param workBook
 	 * @return
 	 */
-	private static HSSFCellStyle setTitleStyle(HSSFWorkbook workBook) {
+	private static HSSFCellStyle createTitleStyle(HSSFWorkbook workBook) {
 		HSSFCellStyle titleStyle = workBook.createCellStyle();
-		titleStyle.setAlignment(HorizontalAlignment.CENTER);//水平居中
+		titleStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
 		titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);// 垂直居中
 		titleStyle.setBorderBottom(BorderStyle.NONE);
 		HSSFFont titleFont = workBook.createFont();
@@ -164,7 +215,7 @@ public class ExpExcelUtil {
 	 * @param workBook
 	 * @return
 	 */
-	private static HSSFCellStyle setContentStyle(HSSFWorkbook workBook) {
+	private static HSSFCellStyle createContentStyle(HSSFWorkbook workBook) {
 		HSSFCellStyle contentStyle = workBook.createCellStyle();
 		contentStyle.setAlignment(HorizontalAlignment.CENTER);
 		contentStyle.setVerticalAlignment(VerticalAlignment.CENTER);

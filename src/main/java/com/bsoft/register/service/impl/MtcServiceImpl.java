@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.register.service.MtcService;
 import com.bsoft.support.service.ICommonService;
 import com.bsoft.support.utils.MD5Util;
@@ -71,20 +71,20 @@ public class MtcServiceImpl implements MtcService {
 					String tempStr = userName + "#" + searcPassword;
 					CookieUtils.setCookie(request, response, "userAccount", tempStr, 0, false);
 					// 登陆成功
-					json.put("code", CommonConstant.LOGIN_SUCCESS_RETURN_CODE);
-					json.put("msg", CommonConstant.LOGIN_SUCCESS_RETURN_MESSAGE);
+					json.put("code", CommonConst.LOGIN_SUCCESS_RETURN_CODE);
+					json.put("msg", CommonConst.LOGIN_SUCCESS_RETURN_MESSAGE);
 					request.getSession().setAttribute("name", userName);
 				} else {// 没找到
-					json.put("code", CommonConstant.LOGIN_FAIL_RETURN_CODE);
-					json.put("msg", CommonConstant.LOGIN_FAIL_RETURN_MESSAGE);
+					json.put("code", CommonConst.LOGIN_FAIL_RETURN_CODE);
+					json.put("msg", CommonConst.LOGIN_FAIL_RETURN_MESSAGE);
 				}
 			} else {
-				json.put("code", CommonConstant.LOGIN_FAIL_RETURN_CODE);
-				json.put("msg", CommonConstant.LOGIN_FAIL_RETURN_MESSAGE);
+				json.put("code", CommonConst.LOGIN_FAIL_RETURN_CODE);
+				json.put("msg", CommonConst.LOGIN_FAIL_RETURN_MESSAGE);
 			}
 		} else {// 登录失败
-			json.put("code", CommonConstant.LOGIN_FAIL_RETURN_CODE);
-			json.put("msg", CommonConstant.LOGIN_FAIL_RETURN_MESSAGE);
+			json.put("code", CommonConst.LOGIN_FAIL_RETURN_CODE);
+			json.put("msg", CommonConst.LOGIN_FAIL_RETURN_MESSAGE);
 		}
 		// 返回结果
 		return json.toJSONString();

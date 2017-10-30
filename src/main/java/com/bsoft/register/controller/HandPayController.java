@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.bsoft.constant.AppCommonConstant;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.AppCommonConst;
+import com.bsoft.constant.CommonConst;
 import com.bsoft.exception.HandPayException;
 import com.bsoft.register.service.HandPayService;
 import com.bsoft.tools.FastJsonUtil;
@@ -72,8 +72,8 @@ public class HandPayController {
 		}
 		requestMap.remove("code2");
 
-		return handPayService.invokeCommonService(methodName, AppCommonConstant.SYSTEM_APP_USP_GETPAIDLIST,
-				AppCommonConstant.SYSTEM_HAND_PROCEDURE_NAME, CommonConstant.SYSTEM_PROCEDURE_SQLKEY, requestMap,
+		return handPayService.invokeCommonService(methodName, AppCommonConst.SYSTEM_APP_USP_GETPAIDLIST,
+				AppCommonConst.SYSTEM_HAND_PROCEDURE_NAME, CommonConst.SYSTEM_PROCEDURE_SQLKEY, requestMap,
 				beginTime);
 	}
 
@@ -89,8 +89,8 @@ public class HandPayController {
 		}
 		requestMap.remove("code2");
 
-		return handPayService.invokeCommonService(methodName, AppCommonConstant.SYSTEM_APP_USP_GETFEELIST,
-				AppCommonConstant.SYSTEM_HAND_PROCEDURE_NAME, CommonConstant.SYSTEM_PROCEDURE_SQLKEY, requestMap,
+		return handPayService.invokeCommonService(methodName, AppCommonConst.SYSTEM_APP_USP_GETFEELIST,
+				AppCommonConst.SYSTEM_HAND_PROCEDURE_NAME, CommonConst.SYSTEM_PROCEDURE_SQLKEY, requestMap,
 				beginTime);
 	}
 
@@ -107,7 +107,7 @@ public class HandPayController {
 		requestMap.remove("code2");
 
 		return handPayService.invokeCommonService(methodName, null,
-				AppCommonConstant.SYSTEM_HAND_PROCEDURE_NAME_SAVE_BILLCHARGE_PRE, "callpro.saveBill", requestMap,
+				AppCommonConst.SYSTEM_HAND_PROCEDURE_NAME_SAVE_BILLCHARGE_PRE, "callpro.saveBill", requestMap,
 				beginTime);
 	}
 
@@ -128,7 +128,7 @@ public class HandPayController {
 			String source = RequestDataUtil.getValueForKey(requestMap, "source");
 
 			String billResult = handPayService.invokeCommonService(methodName, null,
-					AppCommonConstant.SYSTEM_HAND_PROCEDURE_NAME_SAVE_BILLCHARGE, "callpro.saveBill", requestMap,
+					AppCommonConst.SYSTEM_HAND_PROCEDURE_NAME_SAVE_BILLCHARGE, "callpro.saveBill", requestMap,
 					beginTime);
 
 			Map<String, Object> billResultMap = FastJsonUtil.toJSONObject(billResult, Map.class);
@@ -149,7 +149,7 @@ public class HandPayController {
 
 			int counter = 1;
 
-			while (counter < CommonConstant.NOTIFICATION_12580_TIMES) {
+			while (counter < CommonConst.NOTIFICATION_12580_TIMES) {
 				Log.info("确认费用结算同步信息次数:" + counter);
 				if (!isSyscSucc) {
 					counter++;

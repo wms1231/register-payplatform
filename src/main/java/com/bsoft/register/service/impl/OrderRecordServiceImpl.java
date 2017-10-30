@@ -12,7 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.bsoft.constant.CommonConstant;
+import com.bsoft.constant.CommonConst;
+import com.bsoft.constant.OrderTypeEnum;
 import com.bsoft.exception.WebException;
 import com.bsoft.register.service.OrderRecordService;
 import com.bsoft.support.Pager;
@@ -55,7 +56,7 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 		 * 
 		 * @param rowList 内容集合
 		 */
-		HSSFWorkbook workbook = ExpExcelUtil.getWorkbook("wms", "wms", titleList, rowList);
+		HSSFWorkbook workbook = ExpExcelUtil.getSmartWorkbook("wms", "wms", titleList, rowList);
 		ExpExcelUtil.exportExcel(response, "hello.xls", workbook);
 	}
 
@@ -84,7 +85,24 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 			itemRowList.add(CharacterEncodeUtil.returnEncode(MapUtils.getString(map, "BRMC", "")));
 			itemRowList.add(MapUtils.getString(map, "SFZH", ""));
 			itemRowList.add(MapUtils.getString(map, "YYQD", ""));
-			itemRowList.add(MapUtils.getString(map, "YYZT", ""));
+			String orderStatus = MapUtils.getString(map, "YYZT", "");
+			if (OrderTypeEnum.ORDER_EFFECTIVE.getCode().equals(orderStatus)) {
+				orderStatus = OrderTypeEnum.ORDER_EFFECTIVE.getContent();
+			} else if (OrderTypeEnum.ORDER_TIMEOUT.getCode().equals(orderStatus)) {
+				orderStatus = OrderTypeEnum.ORDER_TIMEOUT.getContent();
+			} else if (OrderTypeEnum.ORDER_CANCELLED.getCode().equals(orderStatus)) {
+				orderStatus = OrderTypeEnum.ORDER_CANCELLED.getContent();
+			} else if (OrderTypeEnum.ORDER_COMPLETED.getCode().equals(orderStatus)) {
+				orderStatus = OrderTypeEnum.ORDER_COMPLETED.getContent();
+			} else if (OrderTypeEnum.ORDER_ACTIVE_CANCELL.getCode().equals(orderStatus)) {
+				orderStatus = OrderTypeEnum.ORDER_ACTIVE_CANCELL.getContent();
+			} else if (OrderTypeEnum.ORDER_BREAK.getCode().equals(orderStatus)) {
+				orderStatus = OrderTypeEnum.ORDER_BREAK.getContent();
+			} else {
+				orderStatus = "其它";
+			}
+
+			itemRowList.add(orderStatus);
 			itemRowList.add(CharacterEncodeUtil.returnEncode(MapUtils.getString(map, "YSMC", "")));
 			itemRowList.add(CharacterEncodeUtil.returnEncode(MapUtils.getString(map, "KSMC", "")));
 			itemRowList.add(MapUtils.getString(map, "XDRQ", ""));
@@ -94,7 +112,7 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 			bodyList.add(itemRowList);
 		}
 		// 创建工作簿
-		HSSFWorkbook workbook = ExpExcelUtil.getWorkbook(null, "report", headList, bodyList);
+		HSSFWorkbook workbook = ExpExcelUtil.getSimpleWorkbook(null, "report", headList, bodyList);
 		ExpExcelUtil.exportExcel(response, "yy_" + new Date().getTime() + "_report.xls", workbook);
 	}
 
@@ -123,40 +141,39 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 			for (String order : orders) {
 				order = order.split(":")[0] + ":" + order.split(":")[1].toLowerCase();
 				if (!order.trim().matches(".+:desc|.+:asc")) {
-					throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
+					throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "order格式必须为 字段名:desc或 字段名:asc");
 				}
 			}
 		}
-		
-		if(StringUtils.isNotBlank(beginTime)){
+
+		if (StringUtils.isNotBlank(beginTime)) {
 			if (!beginTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "xBeginTime日期字符串不满足默认的yyyy-MM-dd格式");
+				throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "xBeginTime日期字符串不满足默认的yyyy-MM-dd格式");
 			}
 		}
-		
-		if(StringUtils.isNotBlank(endTime)){
+
+		if (StringUtils.isNotBlank(endTime)) {
 			if (!endTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "xEndTime日期字符串不满足默认的yyyy-MM-dd格式");
+				throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "xEndTime日期字符串不满足默认的yyyy-MM-dd格式");
 			}
 		}
-		
-		if(StringUtils.isNotBlank(yBeginTime)){
+
+		if (StringUtils.isNotBlank(yBeginTime)) {
 			if (!yBeginTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "yBeginTime日期字符串不满足默认的yyyy-MM-dd格式");
+				throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "yBeginTime日期字符串不满足默认的yyyy-MM-dd格式");
 			}
 		}
-		
-		if(StringUtils.isNotBlank(yEndTime)){
+
+		if (StringUtils.isNotBlank(yEndTime)) {
 			if (!yEndTime.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "yEndTime日期字符串不满足默认的yyyy-MM-dd格式");
+				throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "yEndTime日期字符串不满足默认的yyyy-MM-dd格式");
 			}
 		}
-		
 
 		if (StringUtils.isNotBlank(orderStatus)) {
 			List<String> asList = Arrays.asList("0", "1", "2", "3", "4", "5");
 			if (!asList.contains(orderStatus)) {
-				throw new WebException(CommonConstant.DEFAULT_FAIL_CODE, "orderStatus状态只能为0,1,2,3,4,5");
+				throw new WebException(CommonConst.DEFAULT_FAIL_CODE, "orderStatus状态只能为0,1,2,3,4,5");
 			}
 		}
 
