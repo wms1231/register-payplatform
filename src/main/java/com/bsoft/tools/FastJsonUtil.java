@@ -1,11 +1,8 @@
 package com.bsoft.tools;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -172,20 +169,4 @@ public class FastJsonUtil {
 		return true;
 
 	}
-
-	public static void main(String[] args) {
-		String param = "{\"body\":{\"feeRecords\":[{\"barCode\":\"APP231\",\"feeNo\":\"50819741\",\"feeTypeCode\":\"1\",\"totalFee\":0.42}],\"hcnTradeNo\":\"2017101021001004150258358622\",\"precalId\":\"316145\",\"resultId\":\"316145\",\"status\":\"1\"},\"code\":\"200\",\"msg\":\"\"}";
-		Map<String,Object> jsonObject = FastJsonUtil.toJSONObject(param, Map.class);
-		Map<String,Object> jsonBodyObject =  (Map<String, Object>) jsonObject.get("body");
-		List<Object> feeRecords = (List<Object>) jsonBodyObject.get("feeRecords");
-		
-		for (Object object : feeRecords) {
-			Map<String,Object> map = (Map<String, Object>) object;
-			BigDecimal monery = (BigDecimal) map.get("totalFee");
-			System.out.println(monery);
-		}
-		
-		//System.out.println(jsonBodyObject);
-	}
-
 }
