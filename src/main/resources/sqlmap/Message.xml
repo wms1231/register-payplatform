@@ -21,4 +21,19 @@
 		                     WHERE ms.yymm = '111111'
 		                       and ms.yyxh = #{yyxh})
 	</select>
+	
+	<!-- 12580发送短信推送信息查询 -->
+	<select id="queryPushMessage" resultType="hashmap">
+		select to_char(b.brxz) as patientType,
+		       to_char(b.brid) as patientId,
+		       b.brxm as name,
+		       to_char(b.brxb) as sex,
+		       b.sfzh as idcard,
+		       b.lxdh as phone,
+		        to_char(g.ghf+g.zlf) as paymoney
+		  from ms_yygh ms, ms_brda b,ms_ghks g
+		 where ms.brid = b.brid
+		   and ms.ksdm = g.ksdm
+		   and ms.hospno = #{hospno}
+	</select>
 </mapper>

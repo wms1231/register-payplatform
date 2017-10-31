@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.bsoft.tools;
 
 import java.io.BufferedReader;

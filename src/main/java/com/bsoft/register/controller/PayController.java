@@ -2,21 +2,26 @@ package com.bsoft.register.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.alibaba.fastjson.JSONObject;
+
 import com.bsoft.exception.MessageException;
 import com.bsoft.exception.PayException;
 import com.bsoft.register.service.PayService;
+import com.bsoft.tools.JSONObjectUtils;
 import com.bsoft.tools.RequestDataUtil;
 
 @Controller
 @RequestMapping(value = "/pay", produces = "text/html;charset=UTF-8")
 public class PayController {
+
+	private static Logger logger = Logger.getLogger(PayController.class);
 
 	@Autowired
 	private PayService payService;
@@ -71,8 +76,8 @@ public class PayController {
 	@RequestMapping(value = "refundmessage", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String refundmessage(HttpServletRequest request, HttpServletResponse response) {
-		payService.refundmessage(request, response);
-		return "{\"code\":\"0\",\"msg\":\"success\"}";
+		String refundmessage = payService.refundmessage(request, response);
+		return JSONObjectUtils.getReturnMsg(refundmessage);
 	}
 
 	/**
@@ -87,9 +92,11 @@ public class PayController {
 	public String sendmessage(HttpServletRequest request, HttpServletResponse response) {
 		String orderType = RequestDataUtil.getRequestParmByParameter(request, "orderType");
 		if (StringUtils.isBlank(orderType)) {
-			orderType = "1";// 默认设置为膏方预约
+			// 默认设置为普通预约
+			orderType = "1";
 		}
-		return payService.sendmessage(request, response, orderType);
+		String messContent = payService.sendmessage(request, response, orderType);
+		return JSONObjectUtils.getReturnMsg(messContent);
 	}
 
 	/**
@@ -101,8 +108,8 @@ public class PayController {
 	 */
 	@RequestMapping(value = "callback")
 	public String callback(HttpServletRequest request, HttpServletResponse response) {
-		payService.callback(request, response, 1);
-		return "{\"code\":\"0\",\"msg\":\"success\"}";
+		String messContent = payService.callback(request, response, 1);
+		return JSONObjectUtils.getReturnMsg(messContent);
 	}
 
 	/**
@@ -114,31 +121,25 @@ public class PayController {
 	 */
 	@RequestMapping(value = "callCreamBack")
 	public String callCreamBack(HttpServletRequest request, HttpServletResponse response) {
-		payService.callCreamBack(request, response);
-		return "{\"code\":\"0\",\"msg\":\"success\"}";
-
+		String creamMessContent = payService.callCreamBack(request, response);
+		return JSONObjectUtils.getReturnMsg(creamMessContent);
 	}
 
 	@ExceptionHandler(value = { Exception.class })
 	@ResponseBody
 	public String exceptionHander(Exception ex, HttpServletRequest request) {
-		JSONObject jObj = new JSONObject();
 		if (ex instanceof PayException) {
 			PayException e = (PayException) ex;
-			jObj.put("code", -1);
-			jObj.put("msg", e.getMessage());
-			return jObj.toJSONString();
+			logger.error("PayException支付相关异常," + e.getMessage());
+			return JSONObjectUtils.getFailJson(-1, e.getMessage());
 		}
 
 		if (ex instanceof MessageException) {
 			MessageException e = (MessageException) ex;
-			jObj.put("code", -1);
-			jObj.put("msg", e.getMessage());
-			return jObj.toJSONString();
+			logger.error("MessageException短信相关异常," + e.getMessage());
+			return JSONObjectUtils.getFailJson(-1, e.getMessage());
 		}
-
-		jObj.put("code", -1);
-		jObj.put("msg", ex.getMessage());
-		return jObj.toJSONString();
+		logger.error("其它相关异常," + ex.getMessage());
+		return JSONObjectUtils.getFailJson(-1, ex.getMessage());
 	}
 }

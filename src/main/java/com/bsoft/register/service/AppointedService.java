@@ -30,7 +30,7 @@ public interface AppointedService {
 	 * @throws Exception
 	 */
 	public BeanService createPatientInfo(String patIDType, String patID, String patName, String patGender,
-			String patTel, String patAddress, String patAge) throws Exception;
+			String patTel, String patAddress, String patAge);
 
 	/**
 	 * 查询病人主索引
@@ -39,7 +39,7 @@ public interface AppointedService {
 	 * @return
 	 * @throws Exception
 	 */
-	public BeanService queryPatientIndex(String patCardNo) throws Exception;
+	public BeanService queryPatientIndex(String patCardNo);
 
 	/**
 	 * 查询科室信息
@@ -49,7 +49,7 @@ public interface AppointedService {
 	 * @return
 	 * @throws Exception
 	 */
-	public BeanService queryDeptInfo(String deptCode, String parentdeptCode) throws Exception;
+	public BeanService queryDeptInfo(String deptCode, String parentdeptCode);
 
 	/**
 	 * 大科室查询
@@ -57,7 +57,7 @@ public interface AppointedService {
 	 * @return
 	 * @throws Exception
 	 */
-	public BeanService queryDept() throws Exception;
+	public BeanService queryDept();
 
 	/**
 	 * 医生信息查询
@@ -65,7 +65,7 @@ public interface AppointedService {
 	 * @return
 	 * @throws Exception
 	 */
-	public BeanService queryDoctorInfo(String parentdeptCode, String deptCode, String doctorCode) throws Exception;
+	public BeanService queryDoctorInfo(String parentdeptCode, String deptCode, String doctorCode);
 
 	
 	/**
@@ -75,7 +75,7 @@ public interface AppointedService {
 	 * @return
 	 * @throws Exception
 	 */
-	public BeanService fuzzyQueryDoctor(String doctorName) throws Exception;
+	public BeanService fuzzyQueryDoctor(String doctorName);
 
 	/**
 	 * 预约挂号
@@ -86,7 +86,7 @@ public interface AppointedService {
 	 */
 
 	public BeanService appointmentRegOrder(String hisOrdNum, String psOrdNum, String patIndex, String phonenum,
-			String regChannel) throws Exception;
+			String regChannel);
 
 	/**
 	 * 挂号科室预约号源信息查询
@@ -95,7 +95,7 @@ public interface AppointedService {
 	 * @throws Exception
 	 */
 	public BeanService appointmentRegOrderSourceQuery(String beginDate, String endDate, String deptCode,
-			String parentDeptCode, String doctorCode) throws Exception;
+			String parentDeptCode, String doctorCode);
 
 	/**
 	 * 取消预约挂号
@@ -104,7 +104,7 @@ public interface AppointedService {
 	 * @throws Exception
 	 */
 	public BeanService appointmentRegOrderCancel(String hisOrdNum, String psOrdNum, String patIndex, String srialNum,
-			String cancelReason) throws Exception;
+			String cancelReason);
 
 	/**
 	 * 预约挂号记录查询
@@ -112,7 +112,7 @@ public interface AppointedService {
 	 * @return
 	 * @throws Exception
 	 */
-	public BeanService appointmentRegRecordQuery(String patIndex, String hisOrdNum) throws Exception;
+	public BeanService appointmentRegRecordQuery(String patIndex, String hisOrdNum);
 
 	/**
 	 * 查询预约记录
@@ -126,7 +126,7 @@ public interface AppointedService {
 	 * @throws Exception
 	 */
 	public BeanService getOrderRecordList(String scheduleDate, String parentdeptCode, String deptCode,
-			String doctorCode, String patIndex) throws Exception;
+			String doctorCode, String patIndex);
 
 	/**
 	 * 支付完成后通知存储过程
@@ -141,7 +141,7 @@ public interface AppointedService {
 	 * @throws Exception
 	 */
 	public BeanService Notification(String hisOrdNum, String psOrdNum, String payMode, String payAmt, String agtOrdNum,
-			String payTime, String payFlag) throws Exception;
+			String payTime, String payFlag);
 
 	/**
 	 * 退款通知
@@ -152,7 +152,7 @@ public interface AppointedService {
 	 * @return
 	 * @throws Exception
 	 */
-	public BeanService RefundNotification(String hisOrdNum, String payAmt, String payTime) throws Exception;
+	public BeanService RefundNotification(String hisOrdNum, String payAmt, String payTime);
 
 	/**
 	 * 保存短信
@@ -186,6 +186,6 @@ public interface AppointedService {
 	 * @return
 	 * @throws DocumentException
 	 */
-	public String invoke(String requestStr) throws Exception;
+	public String invoke(String requestStr);
 
 }

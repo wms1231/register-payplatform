@@ -1,8 +1,12 @@
 package com.bsoft.register.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +43,18 @@ public class SendMessageServiceImpl implements SendMessageService {
 		return sendMess(message, phone, SendMethodType.LONG, MessageFormat.GB_2312, true);
 	}
 
+	private void validMess(String message, List<String> phone) {
+		for (String p : phone) {
+			if(StringUtils.isBlank(p)){
+				throw new MessageException("-1", "电话号码为空");
+			}
+		}
+		
+		if(StringUtils.isBlank(message)){
+			throw new MessageException("-1", "发送短信内容为空");
+		}
+	}
+
 	@Override
 	public String sendMess(String message, String phone, SendMethodType methodType) {
 		if (methodType == null) {
@@ -59,13 +75,14 @@ public class SendMessageServiceImpl implements SendMessageService {
 	public String sendMess(String message, String phone, SendMethodType methodType, MessageFormat messageFormat,
 			boolean isDeliveryResultRequest) {
 		List<String> phoneList = new ArrayList<>();
-		phoneList.add(MessTypeConst.PHONE_PREFIX+phone);
+		phoneList.add(MessTypeConst.PHONE_PREFIX + phone);
 		return sendMess(message, phoneList, methodType, messageFormat, isDeliveryResultRequest);
 	}
 
 	@Override
 	public String sendMess(String message, List<String> phone, SendMethodType methodType, MessageFormat messageFormat,
 			boolean isDeliveryResultRequest) {
+		validMess(message, phone);
 		SendSmsRequest sendSmsRequest = new SendSmsRequest();
 		sendSmsRequest.setApplicationID(MessTypeConst.APPLICATION_ID);
 		sendSmsRequest.setDeliveryResultRequest(isDeliveryResultRequest);
@@ -77,6 +94,10 @@ public class SendMessageServiceImpl implements SendMessageService {
 		SendSmsResponse sendSmsResponse = null;
 		try {
 			sendSmsResponse = sendMessageDao.sendSms(sendSmsRequest);
+			for (String p : phone) {
+				logger.info("成功发送短信电话=>" + p + "短信内容=>" + message);
+			}
+
 		} catch (Exception e) {
 			logger.error("短信发送异常," + e.getMessage());
 			throw new MessageException("-1", "短信发送失败");

@@ -180,7 +180,4 @@ public class HandPayController {
 		logger.error("其它异常=>" + ex.getMessage());
 		return ResultMessageUtil.getSpecialServiceFail(null, "其它错误");
 	}
-
-
-
 }

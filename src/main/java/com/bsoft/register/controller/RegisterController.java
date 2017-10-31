@@ -3,13 +3,18 @@ package com.bsoft.register.controller;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.bsoft.exception.RegisterException;
+import com.bsoft.exception.WebException;
 import com.bsoft.register.service.RegisterService;
 import com.bsoft.tools.DateFormatUtils;
+import com.bsoft.tools.JSONObjectUtils;
 import com.bsoft.tools.UserUtils;
 
 @Controller
@@ -19,6 +24,8 @@ public class RegisterController {
 	@Autowired
 	private RegisterService registerService;
 
+	private static Logger logger = Logger.getLogger(RegisterController.class);
+
 	@RequestMapping(value = "/createpatientinfo", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String createPatientInfo(@RequestParam(value = "patIDType", required = true) String patIDType,
@@ -27,7 +34,7 @@ public class RegisterController {
 			@RequestParam(value = "patGender", required = true) String patGender,
 			@RequestParam(value = "patTel", required = true) String patTel,
 			@RequestParam(value = "patAge", required = false) String patAge) {
-		
+
 		return registerService.createPatientInfo(patIDType, patID, patName, patGender, patTel, patAge);
 	}
 
@@ -217,7 +224,7 @@ public class RegisterController {
 			@RequestParam(value = "payAmt", required = false) String payAmt, HttpServletRequest request) {
 
 		String cancelTime = DateFormatUtils.format(new Date(), DateFormatUtils.DATE_TIME_PATTERN);
-		return registerService.refundnotification(hisOrdNum, payAmt, UserUtils.getCurrentUser(request),cancelTime);
+		return registerService.refundnotification(hisOrdNum, payAmt, UserUtils.getCurrentUser(request), cancelTime);
 	}
 
 	@RequestMapping(value = "/getservertime", produces = "text/html;charset=UTF-8")
@@ -226,4 +233,21 @@ public class RegisterController {
 		return registerService.getServertime();
 	}
 
+	@ExceptionHandler(value = { Exception.class })
+	@ResponseBody
+	public String exceptionHander(Exception ex, HttpServletRequest request) {
+		if (ex instanceof RegisterException) {
+			RegisterException e = (RegisterException) ex;
+			logger.error("RegisterException注册相关异常," + e.getMessage());
+			return JSONObjectUtils.getFailJson(-1, e.getMessage());
+		}
+
+		if (ex instanceof WebException) {
+			WebException e = (WebException) ex;
+			logger.error("WebException相关异常," + e.getMessage());
+			return JSONObjectUtils.getFailJson(-1, e.getMessage());
+		}
+		logger.error("其它相关异常," + ex.getMessage());
+		return JSONObjectUtils.getFailJson(-1, ex.getMessage());
+	}
 }

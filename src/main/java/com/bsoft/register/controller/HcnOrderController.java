@@ -27,11 +27,8 @@ import com.bsoft.tools.ResultMessageUtil;
 /**
  * 为hcn提供预约相关服务接口
  * 
- *  code: 
- *  200成功， 
- *  201非法请求（解密失败），
- *  203参数错误， 204 其它错误， 205 业务处理失败.
-	msg: code 不为200时出错信息 body: 返回数据的结构体，类型可以是对象或者数组 ，具体类型由接口定义中给出
+ * code: 200成功， 201非法请求（解密失败）， 203参数错误， 204 其它错误， 205 业务处理失败. msg: code
+ * 不为200时出错信息 body: 返回数据的结构体，类型可以是对象或者数组 ，具体类型由接口定义中给出
  *
  */
 @Controller
@@ -65,7 +62,7 @@ public class HcnOrderController {
 
 	@Value("${nextVisitNoSelfPaySuccessMsg}")
 	private String nextVisitNoSelfPaySuccessMsg;
-	
+
 	@Value("${creamPaySuccessMsg}")
 	private String creamPaySuccessMsg;
 
@@ -109,7 +106,7 @@ public class HcnOrderController {
 		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		// 记录接口调用结束时间
 		Date endTime = new Date();
-		logger.info("调用接口:" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
+		logger.info("调用接口结束:" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 
 		return result;
@@ -137,7 +134,7 @@ public class HcnOrderController {
 		// 记录接口调用结束时间
 		Date endTime = new Date();
 
-		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
+		logger.info("调用接口结束" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 
 		return result;
@@ -167,7 +164,7 @@ public class HcnOrderController {
 		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		// 记录接口调用结束时间
 		Date endTime = new Date();
-		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
+		logger.info("调用接口结束" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 		return result;
 	}
@@ -196,7 +193,7 @@ public class HcnOrderController {
 		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		// 记录接口调用结束时间
 		Date endTime = new Date();
-		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
+		logger.info("调用接口结束" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 
 		return result;
@@ -255,8 +252,7 @@ public class HcnOrderController {
 				paySource = RequestDataUtil.getValueForKey(returnPayMap, "source");
 			}
 
-			if (CommonConst.HCN_SOURCE_iOS.equals(paySource)
-					|| CommonConst.HCN_SOURCE_ANDROID.equals(paySource)) {// app支付
+			if (CommonConst.HCN_SOURCE_iOS.equals(paySource) || CommonConst.HCN_SOURCE_ANDROID.equals(paySource)) {// app支付
 				String paySync = hcnOrderService.paySync(returnPayMap, CommonConst.APP_ORGANIZATION_CODE,
 						CommonConst.APP_COMPUTER_NAME, CommonConst.APP_IP);
 				logger.info("app推送结果=>" + paySync);
@@ -286,7 +282,7 @@ public class HcnOrderController {
 			messageMap.put("firstVisitPaySuccessMsg", firstVisitPaySuccessMsg);
 			messageMap.put("nextVisitSelfPaySuccessMsg", nextVisitSelfPaySuccessMsg);
 			messageMap.put("nextVisitNoSelfPaySuccessMsg", nextVisitNoSelfPaySuccessMsg);
-			//添加膏方短信
+			// 添加膏方短信
 			messageMap.put("creamPaySuccessMsg", creamPaySuccessMsg);
 			// 消息类型
 			messageMap.put("msgFmt", msgFmt);
@@ -307,7 +303,7 @@ public class HcnOrderController {
 			logger.error("发送短信异常=>" + e.getMessage());
 		}
 		Date endTime = new Date();
-		logger.info("开始调用接口:" + methodName + ",时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
+		logger.info("调用接口结束:" + methodName + ",时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 
 		return result;// 返回同步数据结果
@@ -426,7 +422,7 @@ public class HcnOrderController {
 		}
 		// 退款数据同步成功
 		Date endTime = new Date();
-		logger.info("开始调用接口:" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime)
+		logger.info("调用接口结束:" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime)
 				+ ",请求结果信息为:" + 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了"
 				+ (endTime.getTime() - beginTime.getTime()) + "毫秒");
 
@@ -460,15 +456,15 @@ public class HcnOrderController {
 		request.setAttribute("out_request_no", thhospno);// 退款订单号
 		// 发出退款
 		String payResult = hcnOrderService.refund(request, response, "466002630", "BSAPP", "BSAPP");
-        System.out.println(payResult);
-		
+		System.out.println(payResult);
+
 		Date endTime = new Date();
 		logger.info("开始调用接口:" + methodName + ",时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求信息为:"
 				+ request + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime())
 				+ "毫秒");
 
 		// 返回最终的退款业务
-		//return payResult;
+		// return payResult;
 		// return sendMessage;
 		return "ok";
 	}
@@ -492,7 +488,7 @@ public class HcnOrderController {
 		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
 		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		Date endTime = new Date();
-		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
+		logger.info("调用接口结束" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 		return result;
 	}
@@ -514,13 +510,12 @@ public class HcnOrderController {
 		param.put("proName", AppCommonConst.SYSTEM_PROCEDURE_NAME);
 		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		Date endTime = new Date();
-		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
+		logger.info("调用接口结束" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 
 		return result;
 	}
-	
-	
+
 	@RequestMapping(value = "/orderRecord", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String orderRecord(HttpServletRequest request) {
@@ -534,20 +529,20 @@ public class HcnOrderController {
 			return FastJsonUtil.toJSONString(requestMap);
 		}
 		requestMap.remove("code2");
-		
+
 		requestMap.put("proNum", AppCommonConst.SYSTEM_APP_USP_YSDM_RQ);
-		
+
 		Map<String, Object> param = RequestDataUtil.getMapByInputParam(Arrays.asList("proName"),
 				Arrays.asList(AppCommonConst.SYSTEM_PROCEDURE_NAME));
-		
+
 		String result = hcnOrderService.invokeProc(CommonConst.SYSTEM_PROCEDURE_SQLKEY, null, requestMap, param);
 		Date endTime = new Date();
-		logger.info("开始调用接口" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
+		logger.info("调用接口结束" + methodName + ":时间为:" + DateUtils.convertDateTime_YYYYMMDDHHMMSS_CN(endTime) + ",请求结果为:"
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 
 		return result;
 	}
-	
+
 	@ExceptionHandler(value = { Exception.class })
 	@ResponseBody
 	public String exceptionHander(Exception ex, HttpServletRequest request) {

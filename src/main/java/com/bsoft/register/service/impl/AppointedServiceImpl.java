@@ -12,6 +12,8 @@ import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bsoft.constant.CommonConst;
+import com.bsoft.domain.HeadBean;
+import com.bsoft.exception.WebException;
 import com.bsoft.factory.AppointedHander;
 import com.bsoft.factory.BeanService;
 import com.bsoft.register.service.AppointedService;
@@ -47,30 +49,30 @@ public class AppointedServiceImpl implements AppointedService {
 	 * @param patTel
 	 * @param patAddress
 	 * @param patAge
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	public BeanService createPatientInfo(String patIDType, String patID, String patName, String patGender,
-			String patTel, String patAddress, String patAge) throws Exception {
+			String patTel, String patAddress, String patAge) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("patIDType", "patID", "patName", "patGender", "patTel", "patAddress", "patAge"),
 				Arrays.asList(patIDType, patID, patName, patGender, patTel, patAddress, patAge));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_CREATE_PATIENT);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_CREATE_PATIENT);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_CREATE_PATIENT);
 	}
 
 	/**
 	 * 查询病人主索引
 	 * 
 	 * @param patCardNo
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public BeanService queryPatientIndex(String patCardNo) throws Exception {
+	public BeanService queryPatientIndex(String patCardNo) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("patCardNo"),
 				Arrays.asList(patCardNo));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_PATIENTINDEX);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_PATIENTINDEX);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_PATIENTINDEX);
 	}
 
 	/**
@@ -78,82 +80,80 @@ public class AppointedServiceImpl implements AppointedService {
 	 * 
 	 * @param deptCode
 	 * @param parentdeptCode
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public BeanService queryDeptInfo(String deptCode, String parentdeptCode) throws Exception {
+	public BeanService queryDeptInfo(String deptCode, String parentdeptCode) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("deptCode", "parentdeptCode"),
 				Arrays.asList(deptCode, parentdeptCode));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_DEPTINFO);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_DEPTINFO);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_DEPTINFO);
 	}
 
 	/**
 	 * 大科室查询
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public BeanService queryDept() throws Exception {
+	public BeanService queryDept() {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(null, null);
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_DEPT);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_DEPT);
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_DEPT);
 	}
 
 	/**
 	 * 医生信息查询
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public BeanService queryDoctorInfo(String parentdeptCode, String deptCode, String doctorCode) throws Exception {
+	public BeanService queryDoctorInfo(String parentdeptCode, String deptCode, String doctorCode) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("parentdeptCode", "deptCode", "doctorCode"),
 				Arrays.asList(parentdeptCode, deptCode, doctorCode));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_DOCTORINFO);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_DOCTORINFO);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_DOCTORINFO);
 	}
 
 	/**
 	 * 模糊查询医生信息
 	 * 
 	 * @param doctorName
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public BeanService fuzzyQueryDoctor(String doctorName) throws Exception {
+	public BeanService fuzzyQueryDoctor(String doctorName) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("doctorName"),
 				Arrays.asList(doctorName));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_DOCTOR);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_DOCTOR);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_DOCTOR);
 	}
 
 	/**
 	 * 预约挂号
 	 * 
 	 * @param request
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 
 	public BeanService appointmentRegOrder(String hisOrdNum, String psOrdNum, String patIndex, String phonenum,
-			String regChannel) throws Exception {
+			String regChannel) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("hisOrdNum", "psOrdNum", "patIndex", "phonenum", "regChannel"),
 				Arrays.asList(hisOrdNum, psOrdNum, patIndex, phonenum, regChannel));
 
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_REGORDER);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_REGORDER);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_REGORDER);
 	}
 
 	/**
 	 * 挂号科室预约号源信息查询
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	public BeanService appointmentRegOrderSourceQuery(String beginDate, String endDate, String deptCode,
-			String parentDeptCode, String doctorCode) throws Exception {
+			String parentDeptCode, String doctorCode) {
 
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("beginDate", "endDate", "deptCode", "parentDeptCode", "doctorCode"),
@@ -161,41 +161,42 @@ public class AppointedServiceImpl implements AppointedService {
 		String requestStr = AppointedServiceImpl.EMPTY_VALUE;
 		if (StringUtils.isNotBlank(deptCode)) {
 			requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_ORDERSOURCE);
-		} else {
-			requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_ORDERSOURCE_NEW);
+			return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_ORDERSOURCE);
 		}
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_ORDERSOURCE_NEW);
+
+		requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_ORDERSOURCE_NEW);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_ORDERSOURCE_NEW);
 
 	}
 
 	/**
 	 * 取消预约挂号
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	public BeanService appointmentRegOrderCancel(String hisOrdNum, String psOrdNum, String patIndex, String srialNum,
-			String cancelReason) throws Exception {
+			String cancelReason) {
 
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("hisOrdNum", "psOrdNum", "patIndex", "srialNum", "cancelReason"),
 				Arrays.asList(hisOrdNum, psOrdNum, patIndex, srialNum, cancelReason));
 
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_REGORDER_CANCEL);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_REGORDER_CANCEL);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_REGORDER_CANCEL);
 	}
 
 	/**
 	 * 预约挂号记录查询
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public BeanService appointmentRegRecordQuery(String patIndex, String hisOrdNum) throws Exception {
+	public BeanService appointmentRegRecordQuery(String patIndex, String hisOrdNum) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("patIndex", "hisOrdNum"),
 				Arrays.asList(patIndex, hisOrdNum));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_REGRECORD);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_REGRECORD);
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_REGRECORD);
 	}
 
 	/**
@@ -206,17 +207,15 @@ public class AppointedServiceImpl implements AppointedService {
 	 * @param deptCode
 	 * @param doctorCode
 	 * @param patIndex
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	public BeanService getOrderRecordList(String scheduleDate, String parentdeptCode, String deptCode,
-			String doctorCode, String patIndex) throws Exception {
+			String doctorCode, String patIndex) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("scheduleDate", "parentdeptCode", "deptCode", "doctorCode", "patIndex"),
 				Arrays.asList(scheduleDate, parentdeptCode, deptCode, doctorCode, patIndex));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_GET_REGORDER);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_GET_REGORDER);
-
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_GET_REGORDER);
 	}
 
 	/**
@@ -228,17 +227,16 @@ public class AppointedServiceImpl implements AppointedService {
 	 * @param payAmt
 	 * @param agtOrdNum
 	 * @param patAddress
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	public BeanService Notification(String hisOrdNum, String psOrdNum, String payMode, String payAmt, String agtOrdNum,
-			String payTime, String payFlag) throws Exception {
+			String payTime, String payFlag) {
 
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("hisOrdNum", "psOrdNum", "payMode", "payAmt", "agtOrdNum", "payTime", "payFlag"),
 				Arrays.asList(hisOrdNum, psOrdNum, payMode, payAmt, agtOrdNum, payTime, payFlag));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_NOTIFICATION);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_NOTIFICATION);
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_NOTIFICATION);
 	}
 
 	/**
@@ -247,14 +245,14 @@ public class AppointedServiceImpl implements AppointedService {
 	 * @param hisOrdNum
 	 * @param payAmt
 	 * @param payTime
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public BeanService RefundNotification(String hisOrdNum, String payAmt, String payTime) throws Exception {
+	public BeanService RefundNotification(String hisOrdNum, String payAmt, String payTime) {
 		Map<String, Object> map = RequestDataUtil.getMapByInputParam(Arrays.asList("hisOrdNum", "payAmt", "payTime"),
 				Arrays.asList(hisOrdNum, payAmt, payTime));
 		String requestStr = AppointedHander.buildRequestData(map, CommonConst.SERVICE_CODE_REFUNDNOTIFICATION);
-		return AppointedHander.buildResultData(invoke(requestStr), CommonConst.SERVICE_CODE_REFUNDNOTIFICATION);
+
+		return getBeanServiceByServiceCode(requestStr, CommonConst.SERVICE_CODE_REFUNDNOTIFICATION);
 	}
 
 	/**
@@ -277,7 +275,7 @@ public class AppointedServiceImpl implements AppointedService {
 		String endTime = RequestDataUtil.getRequestParmByParameter(request, "endTime");
 		String patName = RequestDataUtil.getRequestParmByParameter(request, "patName");
 		String patIndex = RequestDataUtil.getRequestParmByParameter(request, "patIndex");
-		
+
 		deptName = CharacterEncodingUtil.gbtoiso(deptName);
 		doctorName = CharacterEncodingUtil.gbtoiso(doctorName);
 		patName = CharacterEncodingUtil.gbtoiso(patName);
@@ -300,7 +298,6 @@ public class AppointedServiceImpl implements AppointedService {
 		param.put("REGISTTIME", DateFormatUtils.format(new Date(), DateFormatUtils.DATE_TIME_PATTERN));
 		param.put("REFUNDER", "");
 		param.put("REFUNDTIME", "");
-
 		return commonService.insert("msginfo.saveMessageInfo", null, param);
 	}
 
@@ -330,6 +327,30 @@ public class AppointedServiceImpl implements AppointedService {
 	}
 
 	/**
+	 * 获得反参结果
+	 * 
+	 * @param requestStr
+	 * @param serviceCode
+	 * @return
+	 */
+	private BeanService getBeanServiceByServiceCode(String requestStr, String serviceCode) {
+		BeanService bshisservice = null;
+		try {
+			bshisservice = AppointedHander.buildResultData(invoke(requestStr), serviceCode);
+		} catch (Exception e) {
+			throw new WebException("-1", e.getMessage());
+		}
+		if (bshisservice != null && bshisservice.getHead() != null) {
+			HeadBean bean = bshisservice.getHead();
+			if (!bean.getResultCode().equals("0000")) {
+				throw new WebException("-1", bean.getResultMessage());
+			}
+		}
+
+		return bshisservice;
+	}
+
+	/**
 	 * 调用存储过程
 	 * 
 	 * @param beginTime
@@ -337,10 +358,10 @@ public class AppointedServiceImpl implements AppointedService {
 	 * @return
 	 * @throws DocumentException
 	 */
-	public String invoke(String requestStr) throws Exception {
+	public String invoke(String requestStr) {
 		long beginTime = System.currentTimeMillis();
 		// 打印信息
-		logger.info("开始调用存储过程,请求信息为=>" + requestStr + "时间为:" + DateUtils.getCurrentDate_YYYYMMDDHHMMSS() + ",时间标记为["
+		logger.info("=>开始调用存储过程,请求信息为=>" + requestStr + "时间为:" + DateUtils.getCurrentDate_YYYYMMDDHHMMSS() + ",时间标记为["
 				+ beginTime + "]");
 
 		Map<String, Object> param = new HashMap<>();
@@ -349,7 +370,13 @@ public class AppointedServiceImpl implements AppointedService {
 		param.put("output", new Object());
 		param.put("proName", CommonConst.SYSTEM_PROCEDURE_PARAMETER);
 
-		commonService.selectOne("callpro.order", null, param);
+		try {
+			commonService.selectOne("callpro.order", null, param);
+		} catch (Exception e) {
+			logger.error("调用存储过程异常=>" + e.getMessage());
+			throw new WebException("-1", "调用存储过程异常");
+		}
+
 		param.put("msg", CharacterEncodeUtil.returnEncode((String) param.get("msg")));
 		param.put("output", CharacterEncodeUtil.returnEncode((Blob) param.get("output")));
 
@@ -363,7 +390,7 @@ public class AppointedServiceImpl implements AppointedService {
 			returnMsg = msg;
 		}
 		Date endTime = new Date();
-		logger.info("调用存储过程结束，返回异常信息=>" + msg + "结束,时间为:" + DateUtils.getCurrentDate_YYYYMMDDHHMMSS() + ",花费了["
+		logger.info("<=结束存储过程调用，返回异常信息=>" + msg + "结束,时间为:" + DateUtils.getCurrentDate_YYYYMMDDHHMMSS() + ",花费了["
 				+ (endTime.getTime() - beginTime) + "毫秒]");
 		return returnMsg;
 	}
