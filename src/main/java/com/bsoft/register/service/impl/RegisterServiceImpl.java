@@ -6,11 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bsoft.domain.DepartmentReturnBean;
 import com.bsoft.domain.DeptReturnBean;
 import com.bsoft.domain.DoctorReturnBean;
@@ -18,6 +21,7 @@ import com.bsoft.domain.NotificationReturnBean;
 import com.bsoft.domain.OrderRecordReturnBean;
 import com.bsoft.domain.OrderSourceReturnBean;
 import com.bsoft.domain.PatientIndexReturnBean;
+import com.bsoft.domain.PatientReturnBean;
 import com.bsoft.domain.RegOrderReturnBean;
 import com.bsoft.domain.RegSourceResponse;
 import com.bsoft.exception.RegisterException;
@@ -29,7 +33,6 @@ import com.bsoft.support.service.ICommonService;
 import com.bsoft.tools.DateFormatUtils;
 import com.bsoft.tools.DateUtils;
 import com.bsoft.tools.IdcardValidator;
-import com.bsoft.tools.JSONObjectUtils;
 import com.bsoft.tools.RequestDataUtil;
 
 /**
@@ -48,10 +51,10 @@ public class RegisterServiceImpl implements RegisterService {
 	@Autowired
 	private ICommonService commonService;
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public String createPatientInfo(String patIDType, String patID, String patName, String patGender, String patTel,
-			String patAge) {
-
+	public List<PatientReturnBean> createPatientInfo(String patIDType, String patID, String patName, String patGender,
+			String patTel, String patAge) {
 		// 如果是身份证类型，需要校验，并且获取它的性別和出生日期
 		if (patIDType.equals("1")) {
 			boolean value = IdcardValidator.isValidatedAllIdcard(patID);
@@ -69,35 +72,29 @@ public class RegisterServiceImpl implements RegisterService {
 				patAge = birthday.substring(0, 4) + "-" + birthday.substring(4, 6) + "-" + birthday.substring(6, 8);
 			}
 		}
-
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
-				appointedService.createPatientInfo(patIDType, patID, patName, patGender, patTel, "", patAge).getData());
+		return (List<PatientReturnBean>) appointedService
+				.createPatientInfo(patIDType, patID, patName, patGender, patTel, "", patAge).getData();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getDepInfoWeb(String parentdeptCode, String deptCode) {
-
+	public Map<String, List<DeptReturnBean>> getDepInfoWeb(String parentdeptCode, String deptCode) {
 		BeanService bshisservice = appointedService.queryDeptInfo(deptCode, parentdeptCode);
-
 		List<DeptReturnBean> list = (List<DeptReturnBean>) bshisservice.getData();
-		Map<String, List<DeptReturnBean>> deptInfoForWeb = returnService.getDeptInfoForWeb(list);
-
-		return JSONObjectUtils.getSuccessJsonWithMap(0, "success", "data", deptInfoForWeb);
+		return returnService.getDeptInfoForWeb(list);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getDepInfo(HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, List<DepartmentReturnBean>> getDepInfo(HttpServletRequest request,
+			HttpServletResponse response) {
 		List<DepartmentReturnBean> list = (List<DepartmentReturnBean>) appointedService.queryDept().getData();
-		Map<String, List<DepartmentReturnBean>> deptInfo = returnService.getDeptInfo(list);
-		return JSONObjectUtils.getSuccessJsonWithMap(0, "success", "data", deptInfo);
-
+		return returnService.getDeptInfo(list);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getHisOrderInfo(String deptCode, String parentDeptCode, String doctorCode) {
+	public List<RegSourceResponse> getHisOrderInfo(String deptCode, String parentDeptCode, String doctorCode) {
 
 		List<String> week = DateUtils.getweek(new Date());
 		String beginDate = week.get(0);
@@ -108,51 +105,43 @@ public class RegisterServiceImpl implements RegisterService {
 		List<OrderSourceReturnBean> list = (List<OrderSourceReturnBean>) bshisservice.getData();
 		List<OrderSourceReturnBean> orderList = list.stream().filter(o -> !"5".equals(o.getDeptType()))
 				.collect(Collectors.toList());
-		List<RegSourceResponse> data = returnService.getRegSourceResponse(orderList);
-
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", data);
+		return returnService.getRegSourceResponse(orderList);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getScriptOrderInfo(String deptCode, String parentDeptCode, String doctorCode) {
+	public List<RegSourceResponse> getScriptOrderInfo(String deptCode, String parentDeptCode, String doctorCode) {
 		List<String> week = DateUtils.getweek(new Date());
 		String beginDate = week.get(0);
 		String endDate = week.get(week.size() - 1);
 		BeanService bshisservice = appointedService.appointmentRegOrderSourceQuery(beginDate, endDate, deptCode,
 				parentDeptCode, doctorCode);
-
 		List<OrderSourceReturnBean> list = (List<OrderSourceReturnBean>) bshisservice.getData();
 		// java8 代码 过滤集合对象
 		List<OrderSourceReturnBean> orderList = list.stream().filter(o -> "5".equals(o.getDeptType()))
 				.collect(Collectors.toList());
-		List<RegSourceResponse> data = returnService.getRegSourceResponse(orderList);
-
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", data);
+		return returnService.getRegSourceResponse(orderList);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getDocInfo(String doctorName) {
+	public List<DoctorReturnBean> getDocInfo(String doctorName) {
 		// 保留原始集合，以便需求变动
 		List<DoctorReturnBean> list = (List<DoctorReturnBean>) appointedService.fuzzyQueryDoctor(doctorName).getData();
-
 		// 获得普通预约列表
 		List<DoctorReturnBean> orderList = list.stream().filter(e -> !"5".equals(e.getDeptType()))
 				.collect(Collectors.toList());
-
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", orderList);
+		return orderList;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getCreamDeptSearch(String doctorName) {
+	public List<DoctorReturnBean> getCreamDeptSearch(String doctorName) {
 		List<DoctorReturnBean> list = (List<DoctorReturnBean>) appointedService.fuzzyQueryDoctor(doctorName).getData();
 		// 获得膏方列表
 		List<DoctorReturnBean> creamList = list.stream().filter(e -> "5".equals(e.getDeptType()))
 				.collect(Collectors.toList());
-
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", creamList);
+		return creamList;
 	}
 
 	/**
@@ -170,50 +159,44 @@ public class RegisterServiceImpl implements RegisterService {
 		String endDate = week.get(week.size() - 1);
 		BeanService bshisservice = appointedService.appointmentRegOrderSourceQuery(beginDate, endDate, deptCode,
 				parentDeptCode, doctorCode);
-
 		return (List<OrderSourceReturnBean>) bshisservice.getData();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String hisRegister(String hisOrdNum, String phonenum, String patIndex, String regChannel) {
+	public List<RegOrderReturnBean> hisRegister(String hisOrdNum, String phonenum, String patIndex, String regChannel) {
 		BeanService bshisservice = appointedService.appointmentRegOrder(hisOrdNum, new Date().getTime() + "", patIndex,
 				phonenum, regChannel);
-		List<RegOrderReturnBean> regOrderList = (List<RegOrderReturnBean>) bshisservice.getData();
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", regOrderList);
+		return (List<RegOrderReturnBean>) bshisservice.getData();
 	}
 
 	@Override
-	public String querypatientinfo(String cardtype, String cardNo) {
+	public PatientIndexReturnBean querypatientinfo(String cardtype, String cardNo) {
 		// 如果是身份证类型，需要校验并且获取他的性别和出生日期
 		if (cardtype.equals("1")) {
 			boolean value = IdcardValidator.isValidatedAllIdcard(cardNo);
 			if (!value) {
 				throw new RegisterException("-1", "身份证校验失败");
 			}
-
 		}
 		// 获取病员索引
 		BeanService bshisservice = appointedService.queryPatientIndex(cardNo);
-		PatientIndexReturnBean patientIndexReturnBean = (PatientIndexReturnBean) bshisservice.getData().get(0);
-		return JSONObjectUtils.getSuccessJsonWitObj(0, "success", "data", patientIndexReturnBean);
+		return (PatientIndexReturnBean) bshisservice.getData().get(0);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String cancelhisRegister(String hisOrdNum, String patIndex, String serialNum, String cancelReason) {
-		// 预约
+	public List<RegOrderReturnBean> cancelhisRegister(String hisOrdNum, String patIndex, String serialNum,
+			String cancelReason) {
 		BeanService bshisservice = appointedService.appointmentRegOrderCancel(hisOrdNum, null, patIndex, serialNum,
 				cancelReason);
-
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
-				(List<RegOrderReturnBean>) bshisservice.getData());
+		return (List<RegOrderReturnBean>) bshisservice.getData();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String orderRecord(String scheduleDate, String parentdeptCode, String deptCode, String doctorCode,
-			String patIndex) {
+	public List<OrderRecordReturnBean> orderRecord(String scheduleDate, String parentdeptCode, String deptCode,
+			String doctorCode, String patIndex) {
 
 		BeanService bshisservice = appointedService.getOrderRecordList(scheduleDate, parentdeptCode, deptCode,
 				doctorCode, patIndex);
@@ -236,16 +219,15 @@ public class RegisterServiceImpl implements RegisterService {
 				record.setRefunder(RequestDataUtil.getValueForKey(map, "REFUNDER"));
 				record.setRefundtime(RequestDataUtil.getValueForKey(map, "REFUNDTIME"));
 			}
-
 			recordList.add(record);
 		}
 
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", recordList);
+		return recordList;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String notification(String hisOrdNum, String payMode, String payAmt, String payFlag) {
+	public List<NotificationReturnBean> notification(String hisOrdNum, String payMode, String payAmt, String payFlag) {
 		// 查询
 		String payTime = DateFormatUtils.format(new Date(), DateFormatUtils.DATE_TIME_PATTERN);
 		if (payMode.equals("1")) {
@@ -258,28 +240,23 @@ public class RegisterServiceImpl implements RegisterService {
 		BeanService bshisservice = appointedService.Notification(hisOrdNum, null, payMode, payAmt, hisOrdNum, payTime,
 				payFlag);
 
-		List<NotificationReturnBean> orderList = (List<NotificationReturnBean>) bshisservice.getData();
-
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", orderList);
+		return (List<NotificationReturnBean>) bshisservice.getData();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String refundnotification(String hisOrdNum, String payAmt, String refunder, String cancelTime) {
+	public List<NotificationReturnBean> refundnotification(String hisOrdNum, String payAmt, String refunder,
+			String cancelTime) {
 
 		String payTime = DateFormatUtils.format(new Date(), DateFormatUtils.DATE_TIME_PATTERN);
-
 		BeanService bshisservice = appointedService.RefundNotification(hisOrdNum, payAmt, payTime);
-
 		// 退款通知成功
 		Map<String, Object> param = RequestDataUtil.getMapByInputParam(
 				Arrays.asList("refunder", "refundtime", "hospNo"), Arrays.asList(refunder, cancelTime, hisOrdNum));
 		if (commonService.update("msginfo.updateRefunder", null, param) != 1) {
 			throw new RegisterException("-1", "退款受理人保存失败");
 		}
-
-		List<NotificationReturnBean> notiList = (List<NotificationReturnBean>) bshisservice.getData();
-		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", notiList);
+		return (List<NotificationReturnBean>) bshisservice.getData();
 	}
 
 	@Override

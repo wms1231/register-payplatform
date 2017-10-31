@@ -1,7 +1,20 @@
 package com.bsoft.register.service;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.bsoft.domain.DepartmentReturnBean;
+import com.bsoft.domain.DeptReturnBean;
+import com.bsoft.domain.DoctorReturnBean;
+import com.bsoft.domain.NotificationReturnBean;
+import com.bsoft.domain.OrderRecordReturnBean;
+import com.bsoft.domain.PatientIndexReturnBean;
+import com.bsoft.domain.PatientReturnBean;
+import com.bsoft.domain.RegOrderReturnBean;
+import com.bsoft.domain.RegSourceResponse;
 
 /**
  * 提供预约挂号相关服务
@@ -10,14 +23,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 public interface RegisterService {
-	public String createPatientInfo(String patIDType, String patID, String patName, String patGender, String patTel,
+	public List<PatientReturnBean> createPatientInfo(String patIDType, String patID, String patName, String patGender, String patTel,
 			String patAge);
 
-	public String getDepInfoWeb(String parentdeptCode, String deptCode);
+	public Map<String, List<DeptReturnBean>> getDepInfoWeb(String parentdeptCode, String deptCode);
 
-	public String getDepInfo(HttpServletRequest request, HttpServletResponse response);
+	public Map<String, List<DepartmentReturnBean>> getDepInfo(HttpServletRequest request, HttpServletResponse response);
 
-	public String getHisOrderInfo(String deptCode, String parentDeptCode, String doctorCode);
+	public List<RegSourceResponse> getHisOrderInfo(String deptCode, String parentDeptCode, String doctorCode);
 	
 	/**
 	 * 获取膏方排班信息
@@ -27,7 +40,7 @@ public interface RegisterService {
 	 * @param doctorCode
 	 * @return
 	 */
-	public String getScriptOrderInfo(String deptCode, String parentDeptCode, String doctorCode);
+	public List<RegSourceResponse> getScriptOrderInfo(String deptCode, String parentDeptCode, String doctorCode);
 	
 
 	/**
@@ -36,7 +49,7 @@ public interface RegisterService {
 	 * @param doctorName
 	 * @return
 	 */
-	public String getDocInfo(String doctorName);
+	public List<DoctorReturnBean> getDocInfo(String doctorName);
 	
 	
 	
@@ -46,14 +59,14 @@ public interface RegisterService {
 	 * @param doctorName
 	 * @return
 	 */
-	public String getCreamDeptSearch(String doctorName);
+	public List<DoctorReturnBean> getCreamDeptSearch(String doctorName);
 	
 
-	public String hisRegister(String hisOrdNum, String phonenum, String patIndex, String regChannel);
+	public List<RegOrderReturnBean> hisRegister(String hisOrdNum, String phonenum, String patIndex, String regChannel);
 
-	public String querypatientinfo(String cardtype, String cardNo);
+	public PatientIndexReturnBean querypatientinfo(String cardtype, String cardNo);
 
-	public String cancelhisRegister(String hisOrdNum, String patIndex, String serialNum, String cancelReason);
+	public List<RegOrderReturnBean> cancelhisRegister(String hisOrdNum, String patIndex, String serialNum, String cancelReason);
 
 	/**
 	 * 订单查询
@@ -65,11 +78,11 @@ public interface RegisterService {
 	 * @param patIndex
 	 * @return
 	 */
-	public String orderRecord(String scheduleDate, String parentdeptCode, String deptCode, String doctorCode,
+	public List<OrderRecordReturnBean> orderRecord(String scheduleDate, String parentdeptCode, String deptCode, String doctorCode,
 			String patIndex);
 
 	
-	public String notification(String hisOrdNum, String payMode, String payAmt, String payFlag);
+	public List<NotificationReturnBean> notification(String hisOrdNum, String payMode, String payAmt, String payFlag);
 
 	/**
 	 * 退款通知
@@ -80,7 +93,7 @@ public interface RegisterService {
 	 * @param cancelTime
 	 * @return
 	 */
-	public String refundnotification(String hisOrdNum, String payAmt,String refunder,String cancelTime);
+	public List<NotificationReturnBean> refundnotification(String hisOrdNum, String payAmt,String refunder,String cancelTime);
 
 	/**
 	 * 获得服务器时间

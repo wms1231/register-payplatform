@@ -448,9 +448,9 @@ public class HcnOrderController {
 		// 对转换后的jsonStr转换为对象然后添加proNum服务码字段
 
 		// 预约成功,开始退款
-		String yyhospno = "YYGH700260214171011160203";
-		String thhospno = "YYTHHCN700260214171011160203";
-		String payAmount = "38";
+		String yyhospno = "YYGH700260247171031154104";
+		String thhospno = "YYTHHCN700260247171031154104";
+		String payAmount = "15";
 		request.setAttribute("hospNo", yyhospno);// 订单号
 		request.setAttribute("refund_fee", payAmount);// 退款金额
 		request.setAttribute("out_request_no", thhospno);// 退款订单号

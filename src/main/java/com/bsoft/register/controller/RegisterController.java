@@ -35,7 +35,8 @@ public class RegisterController {
 			@RequestParam(value = "patTel", required = true) String patTel,
 			@RequestParam(value = "patAge", required = false) String patAge) {
 
-		return registerService.createPatientInfo(patIDType, patID, patName, patGender, patTel, patAge);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.createPatientInfo(patIDType, patID, patName, patGender, patTel, patAge));
 	}
 
 	/**
@@ -49,7 +50,8 @@ public class RegisterController {
 	@ResponseBody
 	public String getDepInfoWeb(@RequestParam(value = "parentdeptCode", required = false) String parentdeptCode,
 			@RequestParam(value = "deptCode", required = false) String deptCode) {
-		return registerService.getDepInfoWeb(parentdeptCode, deptCode);
+		return JSONObjectUtils.getSuccessJsonWithMap(0, "success", "data",
+				registerService.getDepInfoWeb(parentdeptCode, deptCode));
 	}
 
 	/**
@@ -62,7 +64,8 @@ public class RegisterController {
 	@RequestMapping(value = "/getdepinfo", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String getDepInfo(HttpServletRequest request, HttpServletResponse response) {
-		return registerService.getDepInfo(request, response);
+		return JSONObjectUtils.getSuccessJsonWithMap(0, "success", "data",
+				registerService.getDepInfo(request, response));
 	}
 
 	/**
@@ -84,7 +87,8 @@ public class RegisterController {
 			@RequestParam(value = "parentDeptCode", required = false) String parentDeptCode,
 			@RequestParam(value = "doctorCode", required = false) String doctorCode) {
 
-		return registerService.getHisOrderInfo(deptCode, parentDeptCode, doctorCode);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.getHisOrderInfo(deptCode, parentDeptCode, doctorCode));
 	}
 
 	/**
@@ -106,7 +110,8 @@ public class RegisterController {
 			@RequestParam(value = "parentDeptCode", required = false) String parentDeptCode,
 			@RequestParam(value = "doctorCode", required = false) String doctorCode) {
 
-		return registerService.getScriptOrderInfo(deptCode, parentDeptCode, doctorCode);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.getScriptOrderInfo(deptCode, parentDeptCode, doctorCode));
 	}
 
 	/**
@@ -118,7 +123,7 @@ public class RegisterController {
 	@RequestMapping(value = "/getdocionfo", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String getDocInfo(@RequestParam(value = "doctorName", required = false) String doctorName) {
-		return registerService.getDocInfo(doctorName);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data", registerService.getDocInfo(doctorName));
 	}
 
 	/**
@@ -130,7 +135,8 @@ public class RegisterController {
 	@RequestMapping(value = "/getCreamDeptSearch", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String getCreamDeptSearch(@RequestParam(value = "doctorName", required = false) String doctorName) {
-		return registerService.getCreamDeptSearch(doctorName);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.getCreamDeptSearch(doctorName));
 	}
 
 	/**
@@ -150,14 +156,16 @@ public class RegisterController {
 			@RequestParam(value = "patIndex", required = true) String patIndex,
 			@RequestParam(value = "regChannel", required = true) String regChannel) {
 
-		return registerService.hisRegister(hisOrdNum, phonenum, patIndex, regChannel);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.hisRegister(hisOrdNum, phonenum, patIndex, regChannel));
 	}
 
 	@RequestMapping(value = "/querypatientinfo", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String querypatientinfo(@RequestParam(value = "cardtype", required = true) String cardtype,
 			@RequestParam(value = "cardNo", required = true) String cardNo) {
-		return registerService.querypatientinfo(cardtype, cardNo);
+		return JSONObjectUtils.getSuccessJsonWitObj(0, "success", "data",
+				registerService.querypatientinfo(cardtype, cardNo));
 	}
 
 	/**
@@ -176,7 +184,8 @@ public class RegisterController {
 			@RequestParam(value = "serialNum", required = true) String serialNum,
 			@RequestParam(value = "cancelReason", required = true) String cancelReason) {
 
-		return registerService.cancelhisRegister(hisOrdNum, patIndex, serialNum, cancelReason);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.cancelhisRegister(hisOrdNum, patIndex, serialNum, cancelReason));
 	}
 
 	/**
@@ -197,7 +206,8 @@ public class RegisterController {
 			@RequestParam(value = "parentdeptCode", required = false) String doctorCode,
 			@RequestParam(value = "patIndex", required = false) String patIndex) {
 
-		return registerService.orderRecord(scheduleDate, parentdeptCode, deptCode, doctorCode, patIndex);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.orderRecord(scheduleDate, parentdeptCode, deptCode, doctorCode, patIndex));
 	}
 
 	/**
@@ -214,8 +224,8 @@ public class RegisterController {
 			@RequestParam(value = "payMode", required = false) String payMode,
 			@RequestParam(value = "payAmt", required = false) String payAmt,
 			@RequestParam(value = "payFlag", required = false) String payFlag) {
-
-		return registerService.notification(hisOrdNum, payMode, payAmt, payFlag);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.notification(hisOrdNum, payMode, payAmt, payFlag));
 	}
 
 	@RequestMapping(value = "/refundnotification", produces = "text/html;charset=UTF-8")
@@ -224,7 +234,8 @@ public class RegisterController {
 			@RequestParam(value = "payAmt", required = false) String payAmt, HttpServletRequest request) {
 
 		String cancelTime = DateFormatUtils.format(new Date(), DateFormatUtils.DATE_TIME_PATTERN);
-		return registerService.refundnotification(hisOrdNum, payAmt, UserUtils.getCurrentUser(request), cancelTime);
+		return JSONObjectUtils.getSuccessJsonWithList(0, "success", "data",
+				registerService.refundnotification(hisOrdNum, payAmt, UserUtils.getCurrentUser(request), cancelTime));
 	}
 
 	@RequestMapping(value = "/getservertime", produces = "text/html;charset=UTF-8")
