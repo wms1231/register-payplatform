@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -545,5 +546,12 @@ public class HcnOrderController {
 				+ 200 + ",时间标记为[" + endTime.getTime() + "],调用接口消费了" + (endTime.getTime() - beginTime.getTime()) + "毫秒");
 
 		return result;
+	}
+	
+	@ExceptionHandler(value = { Exception.class })
+	@ResponseBody
+	public String exceptionHander(Exception ex, HttpServletRequest request) {
+		logger.error("其它异常=>" + ex.getMessage());
+		return ResultMessageUtil.getSpecialServiceFail(null, "其它错误");
 	}
 }

@@ -2,7 +2,6 @@ package com.bsoft.register.service.impl;
 
 import java.net.URLEncoder;
 import java.sql.Blob;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,16 +15,17 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.bsoft.constant.AppCommonConst;
 import com.bsoft.constant.CommonConst;
 import com.bsoft.register.service.HcnOrderService;
+import com.bsoft.register.service.SendMessageService;
 import com.bsoft.support.service.ICommonService;
 import com.bsoft.tools.CharacterEncodeUtil;
 import com.bsoft.tools.DateUtils;
 import com.bsoft.tools.DecryptUtil;
 import com.bsoft.tools.FastJsonUtil;
 import com.bsoft.tools.HttpUtil;
+import com.bsoft.tools.JSONObjectUtils;
 import com.bsoft.tools.MessageUtils;
 import com.bsoft.tools.RequestDataUtil;
 import com.bsoft.tools.ResultMessageUtil;
@@ -37,7 +37,12 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 
 	@Autowired
 	private ICommonService commonService;
+
+	@Autowired
+	private SendMessageService sendMessageService;
 	
+	private final static String NULL_VALUE = "";
+
 	public Map<String, Object> callOrderPro(String sqlKey, String dataSource, Map<String, Object> param) {
 		// 加入切换条件
 		String paramV = RequestDataUtil.getValueForKey(
@@ -145,7 +150,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> requestMap = FastJsonUtil.toJSONObject(jsonStr, Map.class);
 
-		if (requestMap == null) {// json传参失败
+		if (requestMap == null) {
 			return ResultMessageUtil.getParamErrorMap("json请求参数不符合规范", null);
 		}
 		requestMap.put("code2", "200");
@@ -184,6 +189,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 		map.put("hospNo", hospNo);
 		map.put("refund_fee", refund_fee);
 		map.put("out_request_no", out_request_no);
+		
 		return HttpUtil.postData(CommonConst.REFUND_PAY_URL, RequestDataUtil.generatorRequestXml(map));// 发出退款请求
 	}
 
@@ -197,7 +203,7 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 		Map<String, String> map = new HashMap<String, String>();
 		// 业务类型 1挂号、2门诊、3住院预交金、4住院结算 5、病历本
 		map.put("payService", "1");
-		map.put("ip", ip);// ip地址 eg：127.0.0.1
+		map.put("ip", ip);
 		// 机构编码
 		map.put("organizationCode", organizationCode);
 		map.put("computerName", computerName);// 计算机名 收费窗口计算机名
@@ -246,29 +252,20 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 	 * @param returnPayMap
 	 */
 	public String sendMessage(Map<String, Object> messageMap) {
-		JSONObject jObj = new JSONObject();
-		jObj.put("code", 0);
-		jObj.put("msg", "success");
 		Map<String, Object> param = new HashMap<>();
-
 		// 从数据中获得电话号码
 		String yyxh = RequestDataUtil.getValueForKey(messageMap, "regRecordId");
 		param.put("yyxh", yyxh);
+		
 		Map<String, Object> phoneMap = commonService.selectOne("cancelPay.queryPhone", null, param);// 查询电话号码
 		String phoneNum = RequestDataUtil.getValueForKey(phoneMap, "PHONE");
-		Byte msgFmt = (Byte) messageMap.get("msgFmt");
-
-		// 消息类型
-		String ApplicationID = (String) messageMap.get("ApplicationID");
-		int reqDeliveryReport = (int) messageMap.get("reqDeliveryReport");
-		int sendMethod = (int) messageMap.get("sendMethod");
 		Map<String, Object> payMessageMap = commonService.selectOne("cancelPay.queryPayMessage", null, param);// 查询发送短信模板参数信息
 
 		// 区分云诊室 和 膏方
 		String deptType = RequestDataUtil.getValueForKey(payMessageMap, "DEPTTYPE");
-		String messageContent = "";
+		String messageContent = NULL_VALUE;
 
-		//膏方预约
+		// 膏方预约
 		if ("5".equals(deptType)) {
 			messageContent = MessageUtils.generateCreamMessage(payMessageMap,
 					RequestDataUtil.getValueForKey(messageMap, "creamPaySuccessMsg"));
@@ -296,36 +293,22 @@ public class HcnOrderServiceImpl implements HcnOrderService {
 
 		// 查不到信息不发送短信
 		if (StringUtils.isNotBlank(messageContent)) {
-			if (StringUtils.isBlank(phoneNum)) {// 如果为空重新电话号码值
+			if (StringUtils.isBlank(phoneNum)) {
 				phoneNum = RequestDataUtil.getValueForKey(messageMap, "PHONE");
 			}
 
-			// 如果内容以及电话号码都不为空发送短信
 			if (StringUtils.isNotBlank(phoneNum)) {
-				try {
-					// 发送短息
-					MessageUtils.sendMessage("jdbc.properties", phoneNum, messageContent, msgFmt, "",
-							new Timestamp(System.currentTimeMillis()), ApplicationID, phoneNum + System.nanoTime(),
-							reqDeliveryReport, sendMethod, this.getClass());
-				} catch (Exception e) {
-					jObj.put("code", -1);
-					jObj.put("msg", "短信发送异常");
-					return jObj.toJSONString();
-				}
-
+				// 发送短息
+				sendMessageService.sendLongMess(messageContent, phoneNum);
+				return JSONObjectUtils.getDefSuccessJson();
 			} else {
-				jObj.put("code", -1);
-				jObj.put("msg", "接受短信电话号码为空");
-				return jObj.toJSONString();
+				return JSONObjectUtils.getFailJson(-1, "接受短信电话号码为空");
+
 			}
 
-			// 返回成功参数
-			return jObj.toJSONString();
 		}
 
-		jObj.put("code", -1);
-		jObj.put("msg", "短信发送信息查找不全");
-		return jObj.toJSONString();
+		return JSONObjectUtils.getFailJson(-1, "发送短信内容为空为空");
 	}
 
 }
