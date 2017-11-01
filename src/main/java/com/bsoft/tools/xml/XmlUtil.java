@@ -16,10 +16,10 @@ import org.dom4j.Node;
 import org.dom4j.tree.DefaultElement;
 
 /**
- * XML处理器<br>
+ * XML处理器
  * 
- * @author XiongChun
- * @since 2009-07-07
+ * @author wms1231
+ *
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public final class XmlUtil {
