@@ -9,7 +9,7 @@
 				            http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 	<!-- 配置spring-cxf客户端 client -->
 
-	<!-- 调用东华webService 正式 -->
+	<!-- 调用东华webService 正式 -->  
 	<jaxws:client id="hisWebService"
 		address="http://172.20.20.6/csp/i-his/DHC.HIS.BS.HISWebService.cls"
 		serviceClass="com.bsoft.client.mscf.HISWebServiceSoap" />
